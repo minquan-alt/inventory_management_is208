@@ -1,0 +1,22 @@
+.root-pane {
+    -fx-background-color: #f2f2f2;
+    -fx-padding: 30;
+}
+
+.title-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.custom-button {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10 30;
+    -fx-background-radius: 8;
+}
+
+.custom-button:hover {
+    -fx-background-color: #1976D2;
+}
