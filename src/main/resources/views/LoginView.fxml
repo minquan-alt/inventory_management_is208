@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<!-- <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.project.desktop.controller.LoginController"
+      spacing="10" alignment="CENTER" prefWidth="300" prefHeight="150">
+
+    <Label text="Login" style="-fx-font-size: 18px;"/>
+    <TextField fx:id="usernameField" promptText="Enter username" />
+    <Button text="Login" fx:id="loginButton" />
+</VBox> -->
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.puzzle.controller.client_controller.LoginController"
+            styleClass="root-pane"
+            prefWidth="1200" prefHeight="700">
+
+    <VBox alignment="CENTER" spacing="20" layoutX="400" layoutY="200">
+        <Label text="Đăng nhập" styleClass="title-label"/>
+        <TextField fx:id="usernameField" promptText="Tên đăng nhập"/>
+        <PasswordField fx:id="passwordField"  promptText="Mật khẩu"/>
+        <Button text="Đăng nhập" fx:id="loginButton" styleClass="custom-button"/>
+    </VBox>
+
+</AnchorPane>
