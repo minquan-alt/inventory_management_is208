@@ -1,5 +1,7 @@
 package com.puzzle.dto.response;
 
+import com.puzzle.entity.User.Role;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,5 +17,5 @@ import lombok.experimental.FieldDefaults;
 public class UserResponse {
     Long id;
     String username;
-    String role;
+    Role role;
 }

@@ -55,7 +55,8 @@ public class UserService {
 
         new_user.setUsername(user.getUsername());
         new_user.setPassword(passwordEncoder.encode(user.getPassword()));
-        new_user.setRole("ROLE_USER");
+        new_user.setRole(user.getRole());
+        new_user.setName(user.getName());
         User result = userRepository.save(new_user);
         
         return mapUserResponse(result);
