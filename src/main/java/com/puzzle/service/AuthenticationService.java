@@ -23,6 +23,7 @@ public class AuthenticationService {
         if(!passwordEncoder.matches(password, user.getPassword())) {
             throw new AppException(ErrorCode.PASSWORD_IS_WRONG);
         }
+        
 
         return user;
     }   
