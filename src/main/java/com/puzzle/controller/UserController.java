@@ -2,6 +2,7 @@ package com.puzzle.controller;
 
 import java.util.List;
 
+import com.puzzle.dto.request.CreateUserRequest;
 import com.puzzle.dto.response.ApiResponse;
 import com.puzzle.dto.response.UserResponse;
 import com.puzzle.entity.User;
@@ -41,9 +42,9 @@ public class UserController {
     }
 
     @PostMapping("")
-    ApiResponse<User> createUser(@RequestBody User user) {
+    ApiResponse<User> createUser(@RequestBody CreateUserRequest request) {
         ApiResponse apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userService.createUser(user));
+        apiResponse.setResult(userService.createUser(request));
         return apiResponse;
     }
 

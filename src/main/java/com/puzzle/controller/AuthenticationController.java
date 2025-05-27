@@ -28,7 +28,7 @@ public class AuthenticationController {
 
     @PostMapping("/log-in")
     ApiResponse<UserResponse> authenticate(@RequestBody AuthenticationRequest req, HttpSession session) {
-        User user = authenticationService.authenticate(req.getUsername(), req.getPassword());
+        User user = authenticationService.authenticate(req.getUsername(), req.getPassword(), session);
         UserResponse userResponse = userService.mapUserResponse(user);
 
         session.setAttribute("currentUser", userResponse);

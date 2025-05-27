@@ -31,8 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
-*.sql
-sql/
+# *.sql
+# sql/
 
 application.properties
 .DS_Store

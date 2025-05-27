@@ -12,11 +12,14 @@ public enum ErrorCode {
     USERNAME_EXISTED(1005, "Username existed"),
     PASSWORD_IS_WRONG(1006, "Password is wrong"),
     NOT_AUTHENTICATED(1007, "You must to log in"),
+    NO_PERMISSION(1008, "You have no permission to access"),
 
     CAN_NOT_EXECUTE_STORE_PROCEDURE(2001, "Store Procedure met error"),
     ERROR_IN_CREATE_STOCK_OUT_REQUEST_PROCESS(2002, "Stock out request process met error"),
+    STOCK_OUT_REQUEST_NOT_FOUND(2003, "Stock out request not found "),
 
     HAVE_NON_EXIST_PRODUCT_ID(3001, "There is at least 1 id not existed"),
+
     
     ;
     ErrorCode(int code, String message){

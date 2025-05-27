@@ -11,20 +11,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpSession;
+
 @Service
 public class AuthenticationService {
     @Autowired
     private UserRepository userRepository;
 
-    public User authenticate(String username, String password) {
+    public User authenticate(String username, String password, HttpSession session) {
         User user = userRepository.findByUsername(username.trim())
             .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         if(!passwordEncoder.matches(password, user.getPassword())) {
             throw new AppException(ErrorCode.PASSWORD_IS_WRONG);
         }
-        
 
+        session.setAttribute("userId", user.getId());
         return user;
     }   
 }

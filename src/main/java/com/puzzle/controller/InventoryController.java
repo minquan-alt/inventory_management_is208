@@ -1,11 +1,11 @@
 package com.puzzle.controller;
 
-import java.net.http.HttpClient;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.puzzle.dto.request.StockOutRequest;
 import com.puzzle.dto.response.ApiResponse;
+import com.puzzle.dto.response.StockOutResolvedResponse;
 import com.puzzle.dto.response.StockOutResponse;
 import com.puzzle.dto.response.UserResponse;
 import com.puzzle.exception.AppException;
@@ -14,7 +14,9 @@ import com.puzzle.service.InventoryService;
 import com.puzzle.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,8 +34,9 @@ public class InventoryController {
     @Autowired
     private UserService userService;
 
+
     @PostMapping("/stock-out")
-    public ApiResponse<StockOutResponse> createStockOut (@RequestBody StockOutRequest request, HttpSession session) throws JsonProcessingException{
+    public ApiResponse<StockOutResponse> createStockOutRequest (@RequestBody StockOutRequest request, HttpSession session) throws JsonProcessingException{
         UserResponse currentUser = (UserResponse) session.getAttribute("currentUser");
         if(currentUser == null) {
             throw new AppException(ErrorCode.NOT_AUTHENTICATED);
@@ -49,6 +52,14 @@ public class InventoryController {
             apiResponse.setCode(ErrorCode.ERROR_IN_CREATE_STOCK_OUT_REQUEST_PROCESS.getCode());
             apiResponse.setMessage(result.get("message").toString());
         }
+
+        return apiResponse;
+    }
+
+    @PutMapping("/stock-out/approve/{stock_request_id}")
+    public ApiResponse<StockOutResolvedResponse> approveStockOutRequest(@PathVariable long stock_request_id, HttpSession session) {
+        ApiResponse<StockOutResolvedResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inventoryService.approveStockOutRequest(stock_request_id, session));
 
         return apiResponse;
     }

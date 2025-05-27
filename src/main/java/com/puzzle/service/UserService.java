@@ -3,6 +3,7 @@ package com.puzzle.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.puzzle.dto.request.CreateUserRequest;
 import com.puzzle.dto.response.UserResponse;
 import com.puzzle.entity.User;
 import com.puzzle.exception.AppException;
@@ -46,17 +47,17 @@ public class UserService {
     }
 
 
-    public UserResponse createUser(User user) {
-        if(userRepository.existsByUsername(user.getUsername())) {
+    public UserResponse createUser(CreateUserRequest request) {
+        if(userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
         User new_user = new User();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
-        new_user.setUsername(user.getUsername());
-        new_user.setPassword(passwordEncoder.encode(user.getPassword()));
-        new_user.setRole(user.getRole());
-        new_user.setName(user.getName());
+        new_user.setUsername(request.getUsername());
+        new_user.setPassword(passwordEncoder.encode(request.getPassword()));
+        new_user.setRole(request.getRole());
+        new_user.setName(request.getName());
         User result = userRepository.save(new_user);
         
         return mapUserResponse(result);

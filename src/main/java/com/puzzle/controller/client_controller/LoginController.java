@@ -7,10 +7,10 @@ import com.puzzle.entity.User;
 import com.puzzle.service.AuthenticationService;
 import com.puzzle.service.UserService;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import jakarta.servlet.http.HttpSession;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,14 +40,14 @@ public class LoginController {
     private Button loginButton;
 
     @FXML
-    private void initialize() {
+    private void initialize(HttpSession session) {
         loginButton.setOnAction(event -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
             
             try {
                 // Gọi thẳng service
-                User user = authService.authenticate(username, password);
+                User user = authService.authenticate(username, password, session);
                 UserResponse userResponse = userService.mapUserResponse(user);
                 
                 Platform.runLater(() -> {
