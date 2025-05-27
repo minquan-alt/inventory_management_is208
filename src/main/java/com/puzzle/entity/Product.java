@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,5 +32,8 @@ public class Product {
     private String unit;
 
     @Column(columnDefinition = "DECIMAL(10, 2) DEFAULT 0.00")
-    private BigDecimal price;
+    private BigDecimal cost_price;
+
+    @Column(columnDefinition = "DECIMAL(10, 2) DEFAULT 0.00")
+    private BigDecimal selling_price;
 }

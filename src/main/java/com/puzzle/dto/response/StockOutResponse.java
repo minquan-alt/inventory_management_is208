@@ -1,18 +1,21 @@
 package com.puzzle.dto.response;
 
-import java.sql.Date;
-import java.util.List;
+import java.time.LocalDateTime;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 @Data
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StockOutResponse {
-    long request_id;
+    Long request_id;
     String request_type;
     long employee_id;
-    Date created_at;
-    List<StockOutDetailsResponse> stockOutDetails;
+    String status;
+    LocalDateTime created_at;
+    LocalDateTime approved_at;
+    Long approved_by;
 }

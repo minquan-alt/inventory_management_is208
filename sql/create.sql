@@ -19,7 +19,8 @@ CREATE TABLE products (
     name VARCHAR(255) NOT NULL,
     description TEXT,
     unit VARCHAR(50),
-    price DECIMAL(10, 2) DEFAULT 0
+    -- cost_price DECIMAL(10, 2) DEFAULT 0,
+    -- selling_price DECIMAL(10, 2) DEFAULT 0
 );
 
 CREATE TABLE stock_requests (
@@ -39,6 +40,7 @@ CREATE TABLE stock_request_details (
     request_id BIGINT,
     product_id BIGINT,
     quantity INT NOT NULL,
+    unit_price DECIMAL(10, 2),
     FOREIGN KEY (request_id) REFERENCES stock_requests(request_id),
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );

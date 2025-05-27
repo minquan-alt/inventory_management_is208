@@ -31,6 +31,7 @@ proc_label: BEGIN
     DECLARE v_product_count INT;
     DECLARE v_product_id BIGINT;
     DECLARE v_quantity INT;
+    DECLARE v_selling_price DECIMAL(10, 2);
     DECLARE v_product_exists BOOLEAN DEFAULT FALSE;
     
     -- Khởi tạo biến output
@@ -67,15 +68,21 @@ proc_label: BEGIN
             ROLLBACK;
             LEAVE proc_label;
         END IF;
+
+        SELECT selling_price INTO v_selling_price
+        FROM products
+        WHERE product_id = v_product_id;
         
         INSERT INTO stock_request_details (
             request_id,
             product_id,
-            quantity
+            quantity,
+            unit_price
         ) VALUES (
             p_request_id,
             v_product_id,
-            v_quantity
+            v_quantity,
+            v_selling_price
         );
         
         SET i = i + 1;

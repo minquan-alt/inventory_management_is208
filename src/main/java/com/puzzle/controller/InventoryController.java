@@ -1,19 +1,19 @@
 package com.puzzle.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.puzzle.dto.request.StockOutRequest;
 import com.puzzle.dto.response.ApiResponse;
-import com.puzzle.dto.response.StockOutResolvedResponse;
 import com.puzzle.dto.response.StockOutResponse;
 import com.puzzle.dto.response.UserResponse;
 import com.puzzle.exception.AppException;
 import com.puzzle.exception.ErrorCode;
 import com.puzzle.service.InventoryService;
-import com.puzzle.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,8 +31,13 @@ public class InventoryController {
     @Autowired
     private InventoryService inventoryService;
 
-    @Autowired
-    private UserService userService;
+    @GetMapping("/stock-out")
+    public ApiResponse<List<StockOutResponse>> getStockOutRequest(HttpSession session) {
+        ApiResponse <List<StockOutResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inventoryService.getStockOutRequests(session));
+
+        return apiResponse;
+    }
 
 
     @PostMapping("/stock-out")
@@ -57,10 +62,20 @@ public class InventoryController {
     }
 
     @PutMapping("/stock-out/approve/{stock_request_id}")
-    public ApiResponse<StockOutResolvedResponse> approveStockOutRequest(@PathVariable long stock_request_id, HttpSession session) {
-        ApiResponse<StockOutResolvedResponse> apiResponse = new ApiResponse<>();
+    public ApiResponse<StockOutResponse> approveStockOutRequest(@PathVariable long stock_request_id, HttpSession session) {
+        ApiResponse<StockOutResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResult(inventoryService.approveStockOutRequest(stock_request_id, session));
 
         return apiResponse;
     }
+
+    @PutMapping("/stock-out/decline/{stock_request_id}")
+    public ApiResponse<String> declineStockOutRequest(@PathVariable long stock_request_id, HttpSession session) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(inventoryService.declinedStockOutRequest(stock_request_id, session));
+
+        return apiResponse;
+    }
+
+
 }

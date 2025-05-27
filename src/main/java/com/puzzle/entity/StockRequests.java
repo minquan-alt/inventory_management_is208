@@ -1,6 +1,7 @@
 package com.puzzle.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,9 +59,13 @@ public class StockRequests {
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "approved_by", referencedColumnName = "employee_id")
+    @JoinColumn(name = "approved_by", referencedColumnName = "employee_id", nullable = true)
     private User approvedBy;
     
-    @Column(name = "approved_at")
+    @Column(name = "approved_at", nullable = true)
     private LocalDateTime approvedAt;
+
+    @OneToMany
+    @JoinColumn(name = "request_id", referencedColumnName = "request_id")
+    List<StockRequestDetails> stockRequestDetails;
 }
