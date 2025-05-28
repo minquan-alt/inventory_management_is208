@@ -9,7 +9,11 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.puzzle.dto.request.ProductRequest;
+import com.puzzle.dto.request.ProductRequestIn;
+import com.puzzle.dto.request.StockInRequest;
 import com.puzzle.dto.request.StockOutRequest;
+import com.puzzle.dto.response.StockInDetailsResponse;
+import com.puzzle.dto.response.StockInResponse;
 import com.puzzle.dto.response.StockOutDetailsResponse;
 import com.puzzle.dto.response.StockOutResponse;
 import com.puzzle.entity.StockRequestDetails;
@@ -19,6 +23,7 @@ import com.puzzle.entity.StockRequests.Status;
 import com.puzzle.entity.User;
 import com.puzzle.exception.AppException;
 import com.puzzle.exception.ErrorCode;
+import com.puzzle.repository.StockInRepository;
 import com.puzzle.repository.StockOutRepository;
 import com.puzzle.repository.StockRequestDetailsRepository;
 import com.puzzle.repository.StockRequestsRepository;
@@ -33,6 +38,9 @@ import jakarta.servlet.http.HttpSession;
 public class InventoryService {
     @Autowired
     private StockOutRepository stockOutRepository;
+
+    @Autowired
+    private StockInRepository stockInRepository;
 
     @Autowired
     private ProductService productService;
@@ -51,7 +59,7 @@ public class InventoryService {
     @Autowired
     private StockRequestDetailsRepository stockRequestDetailsRepository;
 
-    public StockOutDetailsResponse mapToStockRequestDetailsResponse(StockRequestDetails stockRequestDetails) {
+    public StockOutDetailsResponse mapToStockOutRequestDetailsResponse(StockRequestDetails stockRequestDetails) {
         return StockOutDetailsResponse.builder()
             .id(stockRequestDetails.getId())
             .request_id(stockRequestDetails.getStockRequests().getId())
@@ -61,7 +69,7 @@ public class InventoryService {
             .build();
     }
 
-    public StockOutResponse mapToStockRequestsResponse(StockRequests stockRequests) {
+    public StockOutResponse mapToStockOutRequestsResponse(StockRequests stockRequests) {
         return StockOutResponse.builder()
             .request_id(stockRequests.getId())
             .request_type(stockRequests.getRequestType().toString())
@@ -77,7 +85,7 @@ public class InventoryService {
         List<StockRequestDetails> results = stockRequestDetailsRepository.findByStockRequests_Id(stockRequestId); 
         return results
             .stream()
-            .map(this::mapToStockRequestDetailsResponse)
+            .map(this::mapToStockOutRequestDetailsResponse)
             .collect(Collectors.toList());
     }
 
@@ -89,7 +97,7 @@ public class InventoryService {
         
         return results
                 .stream()
-                .map(this::mapToStockRequestsResponse)
+                .map(this::mapToStockOutRequestsResponse)
                 .collect(Collectors.toList());
     }
 
@@ -138,7 +146,7 @@ public class InventoryService {
 
         stockRequestsRepository.save(stockRequest);
 
-        return mapToStockRequestsResponse(stockRequest);
+        return mapToStockOutRequestsResponse(stockRequest);
     }
 
     public String declinedStockOutRequest(long stock_request_id, HttpSession session) {
@@ -166,4 +174,102 @@ public class InventoryService {
         stockRequestsRepository.save(stockRequest);
         return "Declined successfull";
     }
+
+    public StockInDetailsResponse mapToStockInRequestDetailsResponse(StockRequestDetails details) {
+        return StockInDetailsResponse.builder()
+            .id(details.getId())
+            .request_id(details.getStockRequests().getId())
+            .product_id(details.getProduct().getProduct_id())
+            .quantity(details.getQuantity())
+            .unit_cost(details.getUnitPrice())
+            .build();
+    }
+
+        public StockInResponse mapToStockInRequestsResponse(StockRequests stockRequests) {
+        return StockInResponse.builder()
+            .request_id(stockRequests.getId())
+            .request_type(stockRequests.getRequestType().toString())
+            .status(stockRequests.getStatus().toString())
+            .employee_id(stockRequests.getUser().getId())
+            .created_at(stockRequests.getCreatedAt())
+            .approved_at(stockRequests.getApprovedAt())
+            .approved_by(stockRequests.getApprovedBy() != null ? stockRequests.getApprovedBy().getId() : null)
+            .build();
+    }
+    
+    public List<StockInDetailsResponse> getStockInDetailsResponses(Long stockRequestId) {
+        List<StockRequestDetails> results = stockRequestDetailsRepository.findByStockRequests_Id(stockRequestId);
+        return results.stream()
+            .map(this::mapToStockInRequestDetailsResponse)
+            .collect(Collectors.toList());
+    }
+
+    public List<StockInResponse> getStockInRequests(HttpSession session) {
+        List<StockRequests> results = stockRequestsRepository.findByRequestType(RequestType.IN)
+            .orElseThrow(() -> new AppException(ErrorCode.STOCK_IN_REQUEST_NOT_FOUND));
+        return results.stream()
+            .map(this::mapToStockInRequestsResponse)
+            .collect(Collectors.toList());
+    }
+
+    public Map<String, Object> createStockIn(StockInRequest request, long employee_id) throws JsonProcessingException {
+        List<Long> productIds = new ArrayList<>();
+        for (ProductRequestIn productRequest : request.getProducts()) {
+            productIds.add(productRequest.getProduct_id());
+        }
+
+        productService.checkProductsByIds(productIds);
+
+        userService.getUser(employee_id);
+
+        String productJson = objectMapper.writeValueAsString(request.getProducts());
+
+        return stockInRepository.createStockInRequest(employee_id, productJson);
+    }
+
+     public StockInResponse approveStockInRequest(long stock_request_id, HttpSession session) {
+        Long managerId = (Long) session.getAttribute("userId");
+        if(managerId == null) {
+            throw new AppException(ErrorCode.NOT_AUTHENTICATED);
+        }
+        User manager = userRepository.findById(managerId)
+            .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (!"ROLE_PRODUCT_MANAGEMENT".equals(manager.getRole().toString())) {
+            throw new AppException(ErrorCode.NO_PERMISSION);
+        }
+
+        StockRequests stockRequest = stockRequestsRepository.findById(stock_request_id)
+            .orElseThrow(() -> new AppException(ErrorCode.STOCK_IN_REQUEST_NOT_FOUND));
+
+        stockRequest.setStatus(Status.APPROVED);
+        stockRequest.setApprovedAt(LocalDateTime.now());
+        stockRequest.setApprovedBy(manager);
+
+        stockRequestsRepository.save(stockRequest);
+
+        return mapToStockInRequestsResponse(stockRequest);
+    }
+
+    public String declinedStockInRequest(long stock_request_id, HttpSession session) {
+        Long managerId = (Long) session.getAttribute("userId");
+        if(managerId == null) {
+            throw new AppException(ErrorCode.NOT_AUTHENTICATED);
+        }
+        User manager = userRepository.findById(managerId)
+            .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (!"ROLE_PRODUCT_MANAGEMENT".equals(manager.getRole().toString())) {
+            throw new AppException(ErrorCode.NO_PERMISSION);
+        }
+
+        StockRequests stockRequest = stockRequestsRepository.findById(stock_request_id)
+            .orElseThrow(() -> new AppException(ErrorCode.STOCK_IN_REQUEST_NOT_FOUND));
+
+        stockRequest.setStatus(Status.DECLINED);
+        stockRequest.setApprovedAt(LocalDateTime.now());
+        stockRequest.setApprovedBy(manager);
+
+        stockRequestsRepository.save(stockRequest);
+        return "Declined successfully";
+    }
+
 }
