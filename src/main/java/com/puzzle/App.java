@@ -29,13 +29,10 @@ public class App extends Application {
         this.primaryStage = primaryStage;
         // load login view
 
-        FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/views/LoginView.fxml"));
+        FXMLLoader loginLoader = new FXMLLoader(getClass().getResource("/views/GUI/LoginGUI.fxml"));
         loginLoader.setControllerFactory(springContext::getBean);
-        Scene loginScene = new Scene(loginLoader.load(), 1200, 700);
-        // loginScene.getStylesheets().add(App.class.getResource("/com/project/desktop/css/style.css").toExternalForm());
-
+        Scene loginScene = new Scene(loginLoader.load());
         primaryStage.setUserData(this);
-
         primaryStage.setTitle("IVM App - Login");
         primaryStage.setScene(loginScene);
         primaryStage.show();
@@ -49,7 +46,6 @@ public class App extends Application {
     public void showMainView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainView.fxml"));
         Scene scene = new Scene(loader.load(), 1200, 700);
-        // scene.getStylesheets().add(App.class.getResource("/com/project/desktop/css/style.css").toExternalForm());
         primaryStage.setTitle("IVM App - Main");
         primaryStage.setScene(scene);
     }

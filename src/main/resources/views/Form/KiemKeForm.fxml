@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+
+<DialogPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="472.0" prefWidth="537.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints maxHeight="195.60001220703126" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="195.60001220703126" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="195.60001220703126" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="362.00000228881834" minHeight="10.0" prefHeight="362.00000228881834" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TableView prefHeight="354.0" prefWidth="439.0" GridPane.rowIndex="3">
+              <columns>
+                <TableColumn prefWidth="263.200018286705" text="Tên sản phẩm" />
+                <TableColumn prefWidth="128.79998779296875" text="Số lượng" />
+                  <TableColumn prefWidth="120.79999389648435" text="Số lượng thực tế" />
+              </columns>
+            </TableView>
+            <Label text="ID" />
+            <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="175.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Label text="Ngày bắt đầu" GridPane.rowIndex="1" />
+            <DatePicker GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+            <Label text="Bảng sản phẩm" GridPane.rowIndex="2" />
+         </children>
+      </GridPane>
+   </content>
+   <buttonTypes>
+      <ButtonType fx:constant="OK" />
+      <ButtonType fx:constant="CANCEL" />
+   </buttonTypes>
+</DialogPane>

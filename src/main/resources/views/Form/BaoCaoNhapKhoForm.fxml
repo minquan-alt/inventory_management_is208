@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<DialogPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="544.0" prefWidth="670.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="293.5999755859375" minWidth="10.0" prefWidth="144.80003662109374" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="499.20001220703125" minWidth="10.0" prefWidth="359.9999633789063" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="50.20001220703125" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="293.3999938964844" minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="293.3999938964844" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="293.3999938964844" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="ID" />
+            <Label text="Người lập báo cáo" GridPane.rowIndex="3" />
+            <Label text="Thời gian" GridPane.rowIndex="2" />
+            <RadioButton mnemonicParsing="false" text="Tuần" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <RadioButton mnemonicParsing="false" text="Tháng" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <RadioButton mnemonicParsing="false" text="Năm" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+            <Label text="Ngày lập" GridPane.rowIndex="1" />
+            <Label text="Người duyệt" GridPane.rowIndex="4" />
+            <TableView prefHeight="298.0" prefWidth="435.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+              <columns>
+                <TableColumn prefWidth="48.80000305175781" text="STT" />
+                <TableColumn prefWidth="61.60003662109375" text="ID" />
+                  <TableColumn prefWidth="205.5999755859375" text="Tên sản phẩm" />
+                  <TableColumn prefWidth="128.800048828125" text="Số lượng" />
+              </columns>
+            </TableView>
+            <Label text="Bảng sản phẩm nhập kho" GridPane.rowIndex="5" GridPane.valignment="TOP" />
+            <Label text="Tổng số phiếu nhập" GridPane.rowIndex="6" />
+            <Label text="Tổng giá trị nhập kho" GridPane.rowIndex="7" />
+            <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="98.0" GridPane.columnIndex="1" />
+            <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="168.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="167.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="74.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="123.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+   </content>
+   <buttonTypes>
+      <ButtonType fx:constant="OK" />
+      <ButtonType fx:constant="CANCEL" />
+   </buttonTypes>
+</DialogPane>

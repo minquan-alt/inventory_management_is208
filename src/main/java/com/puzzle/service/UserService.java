@@ -23,7 +23,7 @@ public class UserService {
     public static UserResponse mapUserResponse(User user) {
         // UserResponse userResponse = new UserResponse();
 
-        return new UserResponse(user.getId(), user.getUsername(), user.getRole());
+        return new UserResponse(user.getId(), user.getName() ,user.getUsername(), user.getRole());
     }
 
     public List<UserResponse> getUsers() {

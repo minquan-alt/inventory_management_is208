@@ -2,8 +2,10 @@ package com.puzzle.controller.client_controller;
 
 import java.io.IOException;
 
+import com.puzzle.config.FXSessionManager;
 import com.puzzle.dto.response.UserResponse;
 import com.puzzle.entity.User;
+import com.puzzle.exception.AppException;
 import com.puzzle.service.AuthenticationService;
 import com.puzzle.service.UserService;
 
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Controller;
 
 import jakarta.servlet.http.HttpSession;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,11 +42,15 @@ public class LoginController {
     @FXML
     private Button loginButton;
 
+
     @FXML
-    private void initialize(HttpSession session) {
-        loginButton.setOnAction(event -> {
-            String username = usernameField.getText();
-            String password = passwordField.getText();
+    public void clickSignUp(ActionEvent event) {
+        FXSessionManager.startRequestContext();
+        // xử lý sign up tại đây
+        System.out.println("Sign up clicked!");
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        HttpSession session = FXSessionManager.getSession();
             
             try {
                 // Gọi thẳng service
@@ -52,23 +59,58 @@ public class LoginController {
                 
                 Platform.runLater(() -> {
                     try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainView.fxml"));
-                        Parent root = loader.load();
-                        
-                        MainController mainController = loader.getController();
-                        mainController.initData(userResponse);
-                        
+                        FXMLLoader loader;
+                        Parent root;
                         Stage stage = (Stage) loginButton.getScene().getWindow();
+                        switch (user.getRole()) {
+                            case ROLE_PRODUCT_MANAGEMENT:
+                                loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardQLKGUI.fxml"));
+                                root = loader.load();
+                                ManagerController managerController = loader.getController();
+                                // productController.initData(userResponse);
+                                break;
+
+                            case ROLE_HUMAN_MANAGEMENT:
+                                loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardQLGUI.fxml"));
+                                root = loader.load();
+                                HumanManagerController humanController = loader.getController();
+                                // humanController.initData(userResponse);
+                                break;
+
+                            case ROLE_RECEIPT:
+                                loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardNVNKGUI.fxml"));
+                                root = loader.load();
+                                ReceiptController receiptController = loader.getController();
+                                // receiptController.initData(userResponse);
+                                break;
+
+                            case ROLE_ISSUE:
+                                loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardNVXKGUI.fxml"));
+                                root = loader.load();
+                                IssueController issueController = loader.getController();
+                                // issueController.initData(userResponse);
+                                break;
+
+                            default:
+                                throw new IllegalStateException("Unexpected value: " + user.getRole());
+                        }
                         stage.setScene(new Scene(root));
+                        stage.show();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        System.out.print(e);
                     }
                 });
-                
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (AppException e) {
+                System.out.print(e.getMessage());
             }
-        });
     }
+
+    @FXML
+    public void clickForgotPassword(ActionEvent event) {
+        // xử lý sign up tại đây
+        System.out.println("Forgot password clicked!");
+    }
+
+    
     
 }

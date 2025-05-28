@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.doanqlda.SanPhamController">
+
+    <children>
+        <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="377.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
+            <font>
+                <Font name="System Bold" size="25.0" />
+            </font>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+            <cursor>
+                <Cursor fx:constant="NONE" />
+            </cursor>
+        </Label>
+        <Button layoutX="13.0" layoutY="141.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF;" text="DASHBOARD">
+            <font>
+                <Font name="Arial Bold" size="12.0" />
+            </font>
+        </Button>
+        <Label layoutX="57.0" layoutY="354.0" text="UserName" />
+        <Label layoutX="146.0" layoutY="11.0" prefHeight="378.0" prefWidth="438.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
+        <Button layoutX="13.0" layoutY="237.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #0924bc;" text="SẢN PHẢM" textFill="WHITE">
+            <font>
+                <Font name="Arial Bold" size="12.0" />
+            </font>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+        </Button>
+        <Button layoutX="13.0" layoutY="186.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF;" text="KHO" textFill="#080808">
+            <font>
+                <Font name="Arial Bold" size="12.0" />
+            </font>
+        </Button>
+        <TextField layoutX="198.0" layoutY="24.0" prefHeight="26.0" prefWidth="370.0" promptText="Search" />
+        <TableView layoutX="164.0" layoutY="92.0" prefHeight="282.0" prefWidth="406.0">
+            <columns>
+                <TableColumn prefWidth="45.5999755859375" text="MaSP" />
+                <TableColumn prefWidth="111.199951171875" text="Tên sản phẩm" />
+                <TableColumn prefWidth="83.199951171875" text="Số lượng tồn" />
+                <TableColumn prefWidth="49.60003662109375" text="Giá" />
+            <TableColumn prefWidth="66.4000244140625" text="Trạng thái" />
+            <TableColumn prefWidth="46.39996337890625" text="Tác vụ" />
+            </columns>
+        </TableView>
+      <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="22.0" layoutY="351.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../OIP.jpeg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="164.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../../search-vector-icon.jpg" />
+         </image>
+      </ImageView>
+      <Button layoutX="438.0" layoutY="59.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="129.0" style="-fx-background-color: #46a0ef;" text="Thêm sản phẩm" textFill="WHITE" />
+      <Label layoutX="164.0" layoutY="64.0" prefHeight="18.0" prefWidth="170.0" text="Danh sách sản phẩm">
+         <font>
+            <Font name="Arial Bold" size="15.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>

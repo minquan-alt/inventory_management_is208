@@ -18,6 +18,7 @@ public class AuthenticationService {
     @Autowired
     private UserRepository userRepository;
 
+
     public User authenticate(String username, String password, HttpSession session) {
         User user = userRepository.findByUsername(username.trim())
             .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));

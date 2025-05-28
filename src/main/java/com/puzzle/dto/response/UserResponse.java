@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 public class UserResponse {
     Long id;
+    String name;
     String username;
     Role role;
 }
