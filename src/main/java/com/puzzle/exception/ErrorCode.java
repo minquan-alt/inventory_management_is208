@@ -22,8 +22,9 @@ public enum ErrorCode {
 
     HAVE_NON_EXIST_PRODUCT_ID(3001, "There is at least 1 id not existed"),
 
-    
-    
+    PRODUCT_NOT_FOUND(1009, "Product not existed"),
+
+    INVENTORY_NOT_FOUND(1010, "Inventory check not existed"),
     ;
     ErrorCode(int code, String message){
         this.code = code;
