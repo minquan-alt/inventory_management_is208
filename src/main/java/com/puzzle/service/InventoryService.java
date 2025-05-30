@@ -8,16 +8,25 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.puzzle.dto.request.InventoryCheckDetailRequest;
+import com.puzzle.dto.request.InventoryCheckRequest;
 import com.puzzle.dto.request.ProductRequest;
 import com.puzzle.dto.request.ProductRequestIn;
 import com.puzzle.dto.request.StockInRequest;
 import com.puzzle.dto.request.StockOutRequest;
+import com.puzzle.dto.response.InventoryCheckDetailResponse;
+import com.puzzle.dto.response.InventoryCheckResponse;
 import com.puzzle.dto.response.InventoryResponse;
 import com.puzzle.dto.response.StockInDetailsResponse;
 import com.puzzle.dto.response.StockInResponse;
 import com.puzzle.dto.response.StockOutDetailsResponse;
 import com.puzzle.dto.response.StockOutResponse;
 import com.puzzle.entity.Inventory;
+import com.puzzle.entity.InventoryCheck;
+import com.puzzle.entity.InventoryCheckDetail;
+import com.puzzle.entity.InventoryCheckDetailKey;
+import com.puzzle.entity.InventoryLog;
+import com.puzzle.entity.Product;
 import com.puzzle.entity.StockRequestDetails;
 import com.puzzle.entity.StockRequests;
 import com.puzzle.entity.StockRequests.RequestType;
@@ -25,7 +34,11 @@ import com.puzzle.entity.StockRequests.Status;
 import com.puzzle.entity.User;
 import com.puzzle.exception.AppException;
 import com.puzzle.exception.ErrorCode;
+import com.puzzle.mapper.InventoryCheckMapper;
+import com.puzzle.repository.InventoryCheckRepository;
+import com.puzzle.repository.InventoryLogRepository;
 import com.puzzle.repository.InventoryRepository;
+import com.puzzle.repository.ProductRepository;
 import com.puzzle.repository.StockInRepository;
 import com.puzzle.repository.StockOutRepository;
 import com.puzzle.repository.StockRequestDetailsRepository;
@@ -41,9 +54,6 @@ import jakarta.servlet.http.HttpSession;
 public class InventoryService {
     @Autowired
     private StockOutRepository stockOutRepository;
-
-    @Autowired
-    private StockInRepository stockInRepository;
 
     @Autowired
     private ProductService productService;
@@ -65,6 +75,23 @@ public class InventoryService {
     @Autowired
     private InventoryRepository inventoryRepository;
 
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private InventoryLogRepository inventoryLogRepository;
+
+    @Autowired
+    private InventoryCheckRepository inventoryCheckRepository;
+
+    @Autowired
+    private InventoryCheckMapper inventoryCheckMapper;
+
+    @Autowired
+    private StockInRepository stockInRepository;
+
+
+
 
     public StockOutDetailsResponse mapToStockOutRequestDetailsResponse(StockRequestDetails stockRequestDetails) {
         return StockOutDetailsResponse.builder()
@@ -78,7 +105,7 @@ public class InventoryService {
             .build();
     }
 
-    public StockOutResponse mapToStockOutRequestsResponse(StockRequests stockRequests) {
+    public StockOutResponse mapToStockRequestsResponse(StockRequests stockRequests) {
         return StockOutResponse.builder()
             .request_id(stockRequests.getId())
             .request_type(stockRequests.getRequestType().toString())
@@ -124,9 +151,11 @@ public class InventoryService {
         
         return results
                 .stream()
-                .map(this::mapToStockOutRequestsResponse)
+                .map(this::mapToStockRequestsResponse)
                 .collect(Collectors.toList());
     }
+
+
 
     public List<StockOutResponse> getStockOutRequestById(Long id) {
         List<StockRequests> results = stockRequestsRepository.findByIdAndRequestType(id ,RequestType.OUT)
@@ -136,7 +165,7 @@ public class InventoryService {
         
         return results
                 .stream()
-                .map(this::mapToStockOutRequestsResponse)
+                .map(this::mapToStockRequestsResponse)
                 .collect(Collectors.toList());
     }
 
@@ -185,7 +214,7 @@ public class InventoryService {
 
         stockRequestsRepository.save(stockRequest);
 
-        return mapToStockOutRequestsResponse(stockRequest);
+        return mapToStockRequestsResponse(stockRequest);
     }
 
     public String declinedStockOutRequest(long stock_request_id, HttpSession session) {
@@ -312,4 +341,108 @@ public class InventoryService {
         return "Declined successfully";
     }
 
+    public InventoryCheckResponse createCheck(Long userId, InventoryCheckRequest request){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        //Check user ton tai hay k
+        if (!(user.getRole() == User.Role.ROLE_PRODUCT_MANAGEMENT ||
+                user.getRole() == User.Role.ROLE_RECEIPT)) {
+            throw new AppException(ErrorCode.NO_PERMISSION);
+        }
+
+        //Check product ton tai hay k
+        List<Long> productIds = request.getInventoryCheckDetailRequests()
+                .stream().map(InventoryCheckDetailRequest::getProductId).toList();
+
+        List<Product> products = productRepository.findAllById(productIds);
+
+        if (products.size() != productIds.size()){
+            throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+
+        Map<Long, Product> productMap = products.stream()
+                .collect(Collectors.toMap(Product::getProduct_id, p -> p));
+
+
+        InventoryCheck inventoryCheck = InventoryCheck.builder()
+                .createdBy(user)
+                .note(request.getNote() != null ? request.getNote() : "No Note")
+                .build();
+
+        inventoryCheckRepository.save(inventoryCheck);
+
+        List<InventoryCheckDetail> detailInventoryCheckDetails = new ArrayList<>();
+
+        for(InventoryCheckDetailRequest rq : request.getInventoryCheckDetailRequests()){
+            Long productId = rq.getProductId();
+            Product product = productMap.get(productId);
+
+            int systemQuantity = inventoryRepository.findByProductId(productId)
+                    .map(Inventory::getQuantity)
+                    .orElse(0);
+
+            InventoryCheckDetail detail = InventoryCheckDetail.builder()
+                    .id(new InventoryCheckDetailKey(inventoryCheck.getCheck_id(), productId))
+                    .inventoryCheck(inventoryCheck)
+                    .product(product)
+                    .actualQuantity(rq.getActualQuantity())
+                    .systemQuantity(systemQuantity)
+                    .note(rq.getNote() != null ? rq.getNote() : "No Note")
+                    .build();
+//            inventoryCheckDetailRepository.save(detail);
+
+            detailInventoryCheckDetails.add(detail);
+
+            int adjustment = rq.getActualQuantity() - systemQuantity;
+            if (adjustment != 0) {
+                InventoryLog log = InventoryLog.builder()
+                        .product(product)
+                        .changeType(InventoryLog.ChangeType.ADJUST)
+                        .quantityChange(adjustment)
+                        .referenceId(inventoryCheck.getCheck_id())
+                        .referenceType(InventoryLog.ReferenceType.COUNT)
+                        .createdBy(user)
+                        .build();
+                inventoryLogRepository.save(log);
+            }
+        }
+
+
+        List<InventoryCheckDetailResponse> DetailResponseList = inventoryCheckMapper.toDetailResponseList(detailInventoryCheckDetails);
+
+        inventoryCheck.setDetails(detailInventoryCheckDetails);
+        inventoryCheckRepository.save(inventoryCheck);
+
+        return inventoryCheckMapper.toCheckResponse(inventoryCheck);
+
+    }
+
+    public List<InventoryCheckResponse> getAllInventoryCheck(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if (!(user.getRole() == User.Role.ROLE_PRODUCT_MANAGEMENT ||
+                user.getRole() == User.Role.ROLE_RECEIPT)) {
+            throw new AppException(ErrorCode.NO_PERMISSION);
+        }
+
+        return inventoryCheckMapper.toListCheckResponse(inventoryCheckRepository.findAll());
+    }
+
+    public InventoryCheckResponse getInventoryCheck(Long userId, Long inventoryCheckId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if (!(user.getRole() == User.Role.ROLE_PRODUCT_MANAGEMENT ||
+                user.getRole() == User.Role.ROLE_RECEIPT)) {
+            throw new AppException(ErrorCode.NO_PERMISSION);
+        }
+
+        InventoryCheck check = inventoryCheckRepository.findById(inventoryCheckId)
+                .orElseThrow(() -> new AppException(ErrorCode.INVENTORY_NOT_FOUND));
+        return inventoryCheckMapper.toCheckResponse(check);    
+    }
+
+    
 }

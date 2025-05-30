@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.puzzle.dto.request.InventoryCheckRequest;
 import com.puzzle.dto.request.StockInRequest;
 import com.puzzle.dto.request.StockOutRequest;
 import com.puzzle.dto.response.ApiResponse;
+import com.puzzle.dto.response.InventoryCheckResponse;
 import com.puzzle.dto.response.StockInResponse;
 import com.puzzle.dto.response.StockOutResponse;
 import com.puzzle.dto.response.UserResponse;
@@ -119,5 +121,48 @@ public class InventoryController {
         apiResponse.setResult(inventoryService.declinedStockInRequest(stock_request_id, session));
         return apiResponse;
     }
+
+    @PostMapping("/check")
+    public ApiResponse<InventoryCheckResponse> createInventoryCheck(@RequestBody InventoryCheckRequest request, HttpSession session){
+        Long userId = (Long) session.getAttribute("userId");
+
+        InventoryCheckResponse response = inventoryService.createCheck(userId, request);
+
+        System.out.println(response);
+        return ApiResponse.<InventoryCheckResponse>builder()
+                .result(response)
+                .message("Kiem tra kho thanh cong!!!")
+                .build();
+    }
+
+    @GetMapping("/inventory-check")
+    public ApiResponse<List<InventoryCheckResponse>> getInventoryCheck(HttpSession session){
+        Long userId = (Long) session.getAttribute("userId");
+        if(userId == null) {
+            throw new AppException(ErrorCode.NOT_AUTHENTICATED);
+        }
+
+        List<InventoryCheckResponse> response = inventoryService.getAllInventoryCheck(userId);
+
+        System.out.println(response);
+        return ApiResponse.<List<InventoryCheckResponse>>builder()
+                .result(response)
+                .message("Get inventory check success!!!")
+                .build();
+    }
+
+    @GetMapping("/inventory-check/{inventoryCheckId}")
+    public ApiResponse<InventoryCheckResponse> getInventoryCheck(HttpSession session, @PathVariable Long inventoryCheckId){
+        Long userId = (Long) session.getAttribute("userId");
+
+        InventoryCheckResponse response = inventoryService.getInventoryCheck(userId, inventoryCheckId);
+
+        System.out.println(response);
+        return ApiResponse.<InventoryCheckResponse>builder()
+                .result(response)
+                .message("Get inventory check success!!!")
+                .build();
+    }
+
 
 }
