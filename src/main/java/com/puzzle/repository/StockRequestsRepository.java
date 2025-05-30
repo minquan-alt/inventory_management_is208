@@ -10,4 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StockRequestsRepository extends JpaRepository<StockRequests, Long>{
     public Optional<List<StockRequests>> findByRequestType(RequestType requestType);
+    public Optional<List<StockRequests>> findByIdAndRequestType(Long id, RequestType requestType);
 }

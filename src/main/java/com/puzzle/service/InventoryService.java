@@ -12,10 +12,12 @@ import com.puzzle.dto.request.ProductRequest;
 import com.puzzle.dto.request.ProductRequestIn;
 import com.puzzle.dto.request.StockInRequest;
 import com.puzzle.dto.request.StockOutRequest;
+import com.puzzle.dto.response.InventoryResponse;
 import com.puzzle.dto.response.StockInDetailsResponse;
 import com.puzzle.dto.response.StockInResponse;
 import com.puzzle.dto.response.StockOutDetailsResponse;
 import com.puzzle.dto.response.StockOutResponse;
+import com.puzzle.entity.Inventory;
 import com.puzzle.entity.StockRequestDetails;
 import com.puzzle.entity.StockRequests;
 import com.puzzle.entity.StockRequests.RequestType;
@@ -23,6 +25,7 @@ import com.puzzle.entity.StockRequests.Status;
 import com.puzzle.entity.User;
 import com.puzzle.exception.AppException;
 import com.puzzle.exception.ErrorCode;
+import com.puzzle.repository.InventoryRepository;
 import com.puzzle.repository.StockInRepository;
 import com.puzzle.repository.StockOutRepository;
 import com.puzzle.repository.StockRequestDetailsRepository;
@@ -59,11 +62,17 @@ public class InventoryService {
     @Autowired
     private StockRequestDetailsRepository stockRequestDetailsRepository;
 
+    @Autowired
+    private InventoryRepository inventoryRepository;
+
+
     public StockOutDetailsResponse mapToStockOutRequestDetailsResponse(StockRequestDetails stockRequestDetails) {
         return StockOutDetailsResponse.builder()
             .id(stockRequestDetails.getId())
             .request_id(stockRequestDetails.getStockRequests().getId())
             .product_id(stockRequestDetails.getProduct().getProduct_id())
+            .product_name(stockRequestDetails.getProduct().getName())
+            .unit(stockRequestDetails.getProduct().getUnit())
             .quantity(stockRequestDetails.getQuantity())
             .unit_cost(stockRequestDetails.getUnitPrice())
             .build();
@@ -81,6 +90,24 @@ public class InventoryService {
             .build();
     }
 
+    public InventoryResponse mapToInventoryResponse(Inventory inventory) {
+        return InventoryResponse.builder()
+            .inventory_id(inventory.getInventory_id())
+            .product_id(inventory.getProduct().getProduct_id())
+            .product_name(inventory.getProduct().getName())
+            .quantity(inventory.getQuantity())
+            .build();
+    }
+
+
+    public List<InventoryResponse> getInventory() {
+        List<Inventory> results = inventoryRepository.findAll();
+        return results
+            .stream()
+            .map(this::mapToInventoryResponse)
+            .collect(Collectors.toList());
+    }
+
     public List<StockOutDetailsResponse> getStockOutDetailsResponses(Long stockRequestId) {
         List<StockRequestDetails> results = stockRequestDetailsRepository.findByStockRequests_Id(stockRequestId); 
         return results
@@ -89,8 +116,20 @@ public class InventoryService {
             .collect(Collectors.toList());
     }
 
-    public List<StockOutResponse> getStockOutRequests(HttpSession session) {
+    public List<StockOutResponse> getStockOutRequests() {
         List<StockRequests> results = stockRequestsRepository.findByRequestType(RequestType.OUT)
+            .orElseThrow(() -> {
+                throw new AppException(ErrorCode.STOCK_OUT_REQUEST_NOT_FOUND);
+            });
+        
+        return results
+                .stream()
+                .map(this::mapToStockOutRequestsResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<StockOutResponse> getStockOutRequestById(Long id) {
+        List<StockRequests> results = stockRequestsRepository.findByIdAndRequestType(id ,RequestType.OUT)
             .orElseThrow(() -> {
                 throw new AppException(ErrorCode.STOCK_OUT_REQUEST_NOT_FOUND);
             });
@@ -172,6 +211,7 @@ public class InventoryService {
         stockRequest.setApprovedBy(manager);
 
         stockRequestsRepository.save(stockRequest);
+        
         return "Declined successfull";
     }
 

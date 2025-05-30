@@ -5,7 +5,7 @@ import com.puzzle.dto.response.UserResponse;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class ManagerController {
+public class DashBoardProductManagerController {
     public void initData(UserResponse user) {
         // Hiển thị thông tin user trên MainView
         System.out.println("MainView - User: " + user.getUsername());

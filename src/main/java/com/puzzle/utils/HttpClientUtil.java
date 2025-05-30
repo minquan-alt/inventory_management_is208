@@ -1,4 +1,4 @@
-package com.puzzle.util;
+package com.puzzle.utils;
 
 import java.net.URI;
 import java.net.http.HttpClient;

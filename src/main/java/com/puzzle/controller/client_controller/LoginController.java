@@ -7,7 +7,9 @@ import com.puzzle.dto.response.UserResponse;
 import com.puzzle.entity.User;
 import com.puzzle.exception.AppException;
 import com.puzzle.service.AuthenticationService;
+import com.puzzle.service.InventoryService;
 import com.puzzle.service.UserService;
+import com.puzzle.utils.AlertUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +33,12 @@ public class LoginController {
     private AuthenticationService authService;
 
     @Autowired
+    private InventoryService inventoryService;
+
+    @Autowired
     private UserService userService;
+
+
 
     @FXML
     private TextField usernameField;
@@ -46,8 +53,6 @@ public class LoginController {
     @FXML
     public void clickSignUp(ActionEvent event) {
         FXSessionManager.startRequestContext();
-        // xử lý sign up tại đây
-        System.out.println("Sign up clicked!");
         String username = usernameField.getText();
         String password = passwordField.getText();
         HttpSession session = FXSessionManager.getSession();
@@ -66,29 +71,29 @@ public class LoginController {
                             case ROLE_PRODUCT_MANAGEMENT:
                                 loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardQLKGUI.fxml"));
                                 root = loader.load();
-                                ManagerController managerController = loader.getController();
+                                DashBoardProductManagerController managerController = loader.getController();
                                 // productController.initData(userResponse);
                                 break;
 
                             case ROLE_HUMAN_MANAGEMENT:
                                 loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardQLGUI.fxml"));
                                 root = loader.load();
-                                HumanManagerController humanController = loader.getController();
+                                DashBoardHumanManagerController humanController = loader.getController();
                                 // humanController.initData(userResponse);
                                 break;
 
                             case ROLE_RECEIPT:
                                 loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardNVNKGUI.fxml"));
                                 root = loader.load();
-                                ReceiptController receiptController = loader.getController();
+                                DashBoardReceiptController receiptController = loader.getController();
                                 // receiptController.initData(userResponse);
                                 break;
 
                             case ROLE_ISSUE:
                                 loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardNVXKGUI.fxml"));
                                 root = loader.load();
-                                IssueController issueController = loader.getController();
-                                // issueController.initData(userResponse);
+                                DashBoardIssueController issueController = loader.getController();
+                                issueController.initData(userResponse, inventoryService);
                                 break;
 
                             default:
@@ -101,7 +106,7 @@ public class LoginController {
                     }
                 });
             } catch (AppException e) {
-                System.out.print(e.getMessage());
+                AlertUtil.showError(e.getMessage());
             }
     }
 
@@ -109,8 +114,5 @@ public class LoginController {
     public void clickForgotPassword(ActionEvent event) {
         // xử lý sign up tại đây
         System.out.println("Forgot password clicked!");
-    }
-
-    
-    
+    }    
 }

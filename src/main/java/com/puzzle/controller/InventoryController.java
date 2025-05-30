@@ -34,9 +34,9 @@ public class InventoryController {
     private InventoryService inventoryService;
 
     @GetMapping("/stock-out")
-    public ApiResponse<List<StockOutResponse>> getStockOutRequest(HttpSession session) {
+    public ApiResponse<List<StockOutResponse>> getStockOutRequest() {
         ApiResponse <List<StockOutResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(inventoryService.getStockOutRequests(session));
+        apiResponse.setResult(inventoryService.getStockOutRequests());
 
         return apiResponse;
     }

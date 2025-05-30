@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.ReceiptController">
+<AnchorPane stylesheets="@../../static/css/style.css" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.DashBoardReceiptController">
     <children>
         <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="377.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
             <font>

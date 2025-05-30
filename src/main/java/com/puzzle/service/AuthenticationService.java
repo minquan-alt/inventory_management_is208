@@ -31,3 +31,18 @@ public class AuthenticationService {
         return user;
     }   
 }
+/*
+ 1. Lay user-id tu session -> Kiem tra ton tai nguoi dung, 
+                              Kiem tra quyen cua nguoi dung
+ 2. Lay List productIds -> Kiem tra toan bo productIds co trong db, 
+ neu k tra ve AppException
+ 3. Loop productId : productIds
+    + Lay system_quantity tu quantity trong bang inventory
+    + Lay actual_quantity tu dto cua InventoryCheckDetailsRequest
+    + Check_id nam trong dto cua InventoryCheckRequest
+    + tinh adjustment
+    + note lay tu dto InventoryCheckDetailsRequest (nho la xu ly null)
+    + Inventory
+
+
+ */

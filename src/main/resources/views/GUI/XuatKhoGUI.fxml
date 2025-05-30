@@ -11,8 +11,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.shape.Circle?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.doanqlda.NhapKhoController">
+<AnchorPane stylesheets="@../../static/css/style.css" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.IssueController">
 
     <children>
         <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="377.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
@@ -23,17 +24,17 @@
                 <Insets />
             </opaqueInsets>
             <cursor>
-                <Cursor fx:constant="NONE" />
+                <Cursor fx:constant="DEFAULT" />
             </cursor>
         </Label>
-        <Button layoutX="13.0" layoutY="141.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF;" text="DASHBOARD">
+        <Button fx:id="getDashboardView" layoutX="13.0" layoutY="141.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF;" text="DASHBOARD">
             <font>
                 <Font name="Arial Bold" size="12.0" />
             </font>
         </Button>
-        <Label layoutX="57.0" layoutY="354.0" text="UserName" />
+        <Label fx:id="usernameLbl" layoutX="57.0" layoutY="354.0" text="UserName" />
         <Label layoutX="146.0" layoutY="11.0" prefHeight="378.0" prefWidth="438.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
-        <Button layoutX="13.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #0924bc;" text="XUẤT KHO" textFill="WHITE">
+        <Button fx:id="getIssueView" layoutX="13.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #0924bc;" text="XUẤT KHO" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="12.0" />
             </font>
@@ -41,30 +42,29 @@
                 <Insets />
             </opaqueInsets>
         </Button>
-        <TextField layoutX="203.0" layoutY="21.0" prefHeight="26.0" prefWidth="354.0" promptText="Search" />
-        <TableView layoutX="172.0" layoutY="93.0" prefHeight="282.0" prefWidth="386.0">
+        <TextField fx:id="searchField" layoutX="203.0" layoutY="21.0" prefHeight="26.0" prefWidth="354.0" promptText="Search" />
+        <TableView fx:id="issueTable" layoutX="172.0" layoutY="93.0" prefHeight="282.0" prefWidth="386.0">
             <columns>
-                <TableColumn prefWidth="59.20001220703125" text="MaNK" />
-                <TableColumn prefWidth="160.0" text="Tên sản phẩm" />
-                <TableColumn prefWidth="86.4000244140625" text="Ngày xuất" />
-            <TableColumn prefWidth="79.199951171875" text="Trạng thái" />
+                <TableColumn fx:id="colMaXK" text="Mã XK" prefWidth="59.2" />
+                <TableColumn fx:id="colMaNV" text="Mã NV" prefWidth="160.0" />
+                <TableColumn fx:id="colNgayTao" text="Ngày tạo" prefWidth="86.4" />
+                <TableColumn fx:id="colNguoiDuyet" text="Người duyệt" prefWidth="86.4" />
+                <TableColumn fx:id="colNgayDuyet" text="Ngày duyệt" prefWidth="86.4" />
+                <TableColumn fx:id="colTrangThai" text="Trạng thái" prefWidth="79.2" />
+                <TableColumn fx:id="colChiTiet" text="Chi tiết" prefWidth="75.0" />
             </columns>
         </TableView>
-        <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="172.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fx:id="searchIcon" fitHeight="26.0" fitWidth="26.0" layoutX="172.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@../../../../../../../../search-vector-icon.jpg" />
+                <Image url="@/static/images/search-vector-icon.jpg" />
             </image>
         </ImageView>
-        <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="22.0" layoutY="352.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@../../../../../../../OIP.jpeg" />
-            </image>
-        </ImageView>
+        <Circle fill="DODGERBLUE" layoutX="35.0" layoutY="363.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
       <Label layoutX="172.0" layoutY="56.0" text="Danh sách xuất kho">
          <font>
             <Font name="Arial Bold" size="15.0" />
          </font>
       </Label>
-      <Button layoutX="431.0" layoutY="60.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="125.0" style="-fx-background-color: #46a0ef;" text="Tạo lệnh xuất kho" textFill="WHITE" />
+      <Button fx:id="createStockOut" layoutX="431.0" layoutY="60.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="125.0" style="-fx-background-color: #46a0ef;" text="Tạo lệnh xuất kho" textFill="WHITE" />
     </children>
 </AnchorPane>

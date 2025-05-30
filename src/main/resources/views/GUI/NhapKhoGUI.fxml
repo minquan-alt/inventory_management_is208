@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.doanqlda.NhapKhoController">
+<AnchorPane stylesheets="@../../static/css/style.css" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.doanqlda.NhapKhoController">
 
     <children>
         <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="377.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
@@ -23,7 +23,7 @@
                 <Insets />
             </opaqueInsets>
             <cursor>
-                <Cursor fx:constant="NONE" />
+                <Cursor fx:constant="DEFAULT" />
             </cursor>
         </Label>
         <Button layoutX="13.0" layoutY="141.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF;" text="DASHBOARD">

@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.IssueController">
+<AnchorPane stylesheets="@../../static/css/style.css" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.DashBoardIssueController">
     <children>
         <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="377.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
             <font>
@@ -25,9 +25,9 @@
             </cursor>
         </Label>
         <Circle fill="DODGERBLUE" layoutX="35.0" layoutY="363.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
-        <Label layoutX="57.0" layoutY="354.0" text="UserName" />
+        <Label fx:id="username" layoutX="57.0" layoutY="354.0" text="UserName" />
         <Label layoutX="140.0" layoutY="13.0" prefHeight="122.0" prefWidth="444.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 20;" />
-        <Label layoutX="163.0" layoutY="24.0" style="-fx-background-color: #FFFFFF;" text="Hello UserName, wellcome back!">
+        <Label fx:id="helloUser" layoutX="163.0" layoutY="24.0" style="-fx-background-color: #FFFFFF;" text="Hello UserName, wellcome back!">
             <font>
                 <Font name="Arial" size="15.0" />
             </font>
@@ -38,7 +38,7 @@
                 <Font name="System Bold" size="18.0" />
             </font>
         </Label>
-        <Label alignment="CENTER" layoutX="211.0" layoutY="82.0" prefHeight="27.0" prefWidth="86.0" text="1000" textFill="#fffafa">
+        <Label fx:id="quantityInventory" alignment="CENTER" layoutX="211.0" layoutY="82.0" prefHeight="27.0" prefWidth="86.0" text="1000" textFill="#fffafa">
             <font>
                 <Font name="System Bold" size="18.0" />
             </font>
@@ -54,18 +54,18 @@
                 <Font name="System Bold" size="18.0" />
             </font>
         </Label>
-        <Label alignment="CENTER" layoutX="422.0" layoutY="89.0" prefHeight="27.0" prefWidth="86.0" text="15" textFill="#fffafa">
+        <Label fx:id="warningInventory" alignment="CENTER" layoutX="422.0" layoutY="89.0" prefHeight="27.0" prefWidth="86.0" text="15" textFill="#fffafa">
             <font>
                 <Font name="System Bold" size="18.0" />
             </font>
         </Label>
         <Label layoutX="140.0" layoutY="149.0" prefHeight="240.0" prefWidth="444.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
-        <BarChart layoutX="157.0" layoutY="187.0" prefHeight="173.0" prefWidth="410.0">
+        <BarChart fx:id="barChart" layoutX="157.0" layoutY="187.0" prefHeight="173.0" prefWidth="410.0">
             <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <CategoryAxis fx:id="xAxis" side="BOTTOM" />
             </xAxis>
             <yAxis>
-                <NumberAxis side="LEFT" />
+                <NumberAxis fx:id="yAxis" side="LEFT" />
             </yAxis>
         </BarChart>
         <Label layoutX="157.0" layoutY="159.0" prefHeight="27.0" prefWidth="123.0" text="Biểu đồ tháng">
@@ -73,12 +73,12 @@
                 <Font name="Arial Bold" size="18.0" />
             </font>
         </Label>
-        <Button layoutX="13.0" layoutY="136.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #0924bc;" text="DASHBOARD" textFill="WHITE">
+        <Button fx:id="getDashboardView" layoutX="13.0" layoutY="136.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #0924bc;" text="DASHBOARD" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="12.0" />
             </font>
         </Button>
-        <Button layoutX="13.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #FFFFFF;" text="NHẬP KHO">
+        <Button fx:id="getIssueView" layoutX="13.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #FFFFFF;" text="XUẤT KHO">
             <font>
                 <Font name="Arial Bold" size="12.0" />
             </font>
