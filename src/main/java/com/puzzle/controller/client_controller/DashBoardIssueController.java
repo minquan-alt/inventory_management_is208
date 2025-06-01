@@ -126,7 +126,6 @@ public class DashBoardIssueController {
         yAxis.setLabel("Số lượng");
         yAxis.setAutoRanging(true);
         
-        barChart.setTitle("Biểu đồ tồn kho");
         barChart.setBarGap(5);
         barChart.setCategoryGap(20);
         barChart.setLegendVisible(true);

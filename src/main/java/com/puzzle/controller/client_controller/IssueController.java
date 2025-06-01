@@ -2,6 +2,7 @@ package com.puzzle.controller.client_controller;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.puzzle.dto.response.StockOutResponse;
@@ -37,30 +38,16 @@ import javafx.util.Callback;
 public class IssueController {
     private static final String DASHBOARD_FXML = "/views/GUI/DashBoardNVXKGUI.fxml";
     private static final String ISSUE_FXML = "/views/GUI/XuatKhoGUI.fxml";
-
     private static final String ISSUE_DETAIL_FXML = "/views/GUI/ChiTietXuatKhoGUI.fxml";
     private static final String FORM_XUATKHO_FXML = "/views/Form/XuatKhoForm.fxml";
 
-    @FXML
-    private Label usernameLbl;
-
-    @FXML
-    private TextField searchField;
-
-    @FXML
-    private Button getDashboardView;
-
-    @FXML
-    private Button getIssueView;
-
-    @FXML
-    private TableView<StockOutResponse> issueTable;
-
-    @FXML
-    private ImageView searchIcon;
-
-    @FXML
-    private Button createStockOut;
+    @FXML private Label usernameLbl;
+    @FXML private TextField searchField;
+    @FXML private Button getDashboardView;
+    @FXML private Button getIssueView;
+    @FXML private TableView<StockOutResponse> issueTable;
+    @FXML private ImageView searchIcon;
+    @FXML private Button createStockOut;
 
     @FXML private TableColumn<StockOutResponse, String> colMaXK;
     @FXML private TableColumn<StockOutResponse, String> colMaNV;
@@ -73,42 +60,87 @@ public class IssueController {
     private InventoryService inventoryService;
     private UserResponse user;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-    boolean isSearched;
+    private boolean isSearched = false;
 
     @FXML
     public void initialize() {
-        searchIcon.setCursor(Cursor.HAND);
-        isSearched = false;
+        if (searchIcon != null) {
+            searchIcon.setCursor(Cursor.HAND);
+        }
+        
         setupEventHandlers();
-        setupDetailColumn();
+        setupTableColumns();
     }
 
     private void setupEventHandlers() {
-        getDashboardView.setOnAction(event -> handleViewSwitch(DASHBOARD_FXML, "Dashboard"));
-        getIssueView.setOnAction(event -> handleViewSwitch(ISSUE_FXML, "Xuất kho"));
-
-        createStockOut.setOnAction(event -> handleCreateStockOut());
-        searchIcon.setOnMouseClicked(event -> handleSearch());
+        if (getDashboardView != null) {
+            getDashboardView.setOnAction(event -> handleViewSwitch(DASHBOARD_FXML, "Dashboard"));
+        }
+        if (getIssueView != null) {
+            getIssueView.setOnAction(event -> handleViewSwitch(ISSUE_FXML, "Xuất kho"));
+        }
+        if (createStockOut != null) {
+            createStockOut.setOnAction(event -> handleCreateStockOut());
+        }
+        if (searchIcon != null) {
+            searchIcon.setOnMouseClicked(event -> handleSearch());
+        }
     }
-    
 
-
-    private void setupDetailColumn() {
-        colChiTiet.setCellFactory(new Callback<TableColumn<StockOutResponse, Void>, TableCell<StockOutResponse, Void>>() {
+    private void setupTableColumns() {
+        colMaXK.setCellValueFactory(new PropertyValueFactory<>("request_id"));
+        colMaNV.setCellValueFactory(new PropertyValueFactory<>("employee_id"));
+        colNgayTao.setCellValueFactory(new PropertyValueFactory<>("created_at"));
+        colNguoiDuyet.setCellFactory(new Callback<TableColumn<StockOutResponse, String>, TableCell<StockOutResponse, String>>() {
             @Override
+            public TableCell<StockOutResponse, String> call(TableColumn<StockOutResponse, String> param) {
+                return new TableCell<StockOutResponse, String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null || item.trim().isEmpty()) {
+                            setText("Chưa duyệt");
+                            setStyle("-fx-text-fill: #666666; -fx-font-style: italic;");
+                        } else {
+                            setText(item);
+                            setStyle("");
+                        }
+                    }
+                };
+            }
+        });
+        colNgayDuyet.setCellFactory(new Callback<TableColumn<StockOutResponse,String>,TableCell<StockOutResponse,String>>() {
+            public TableCell<StockOutResponse, String> call (TableColumn<StockOutResponse, String> param) {
+                return new TableCell<StockOutResponse, String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null || item.trim().isEmpty()) {
+                            setText("Chưa duyệt");
+                            setStyle("-fx-text-fill: #666666; -fx-font-style: italic;");
+                        } else {
+                            setText(item);
+                            setStyle("");
+                        }
+                    }
+                };
+            }
+        });
+        colTrangThai.setCellValueFactory(new PropertyValueFactory<>("status"));
+        colChiTiet.setCellFactory(new Callback<TableColumn<StockOutResponse,Void>,TableCell<StockOutResponse,Void>>() {
             public TableCell<StockOutResponse, Void> call(TableColumn<StockOutResponse, Void> param) {
                 return new TableCell<StockOutResponse, Void>() {
-                    private final Button detailButton = new Button("Xem");
-                    
+                    private final Button detailButton = new Button("Xem");                        
                     {
                         detailButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 10px;");
-                        detailButton.setPrefWidth(60);
                         detailButton.setOnAction(event -> {
                             StockOutResponse stockOut = getTableView().getItems().get(getIndex());
-                            showDetailDialog(stockOut);
+                            if (stockOut != null) {
+                                showDetailDialog(stockOut);
+                            }
                         });
                     }
-                    
+                        
                     @Override
                     protected void updateItem(Void item, boolean empty) {
                         super.updateItem(item, empty);
@@ -125,39 +157,46 @@ public class IssueController {
 
     private void handleCreateStockOut() {
         try {
-            // load form xuat kho
             FXMLLoader loader = new FXMLLoader(getClass().getResource(FORM_XUATKHO_FXML));
             DialogPane dialogPane = loader.load();
             IssueFormController issueFormController = loader.getController();
-            issueFormController.initData(user, inventoryService);
+            
+            if (issueFormController != null) {
+                issueFormController.initData(user, inventoryService);
+            }
 
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(dialogPane);
             dialog.setTitle("Tạo Lệnh Xuất Kho");
             dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(createStockOut.getScene().getWindow());
+            if (createStockOut != null && createStockOut.getScene() != null) {
+                dialog.initOwner(createStockOut.getScene().getWindow());
+            }
             dialog.showAndWait();
 
-            if (issueFormController.isSubmitted()) {
-                List<StockOutResponse> issueList = inventoryService.getStockOutRequests();
-                loadIssueData(issueList);
+            if (issueFormController != null && issueFormController.isSubmitted()) {
+                return;
             }
         } catch (IOException e) {
             e.printStackTrace();
             AlertUtil.showError("Lỗi khi mở form xuất kho: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertUtil.showError("Lỗi không xác định: " + e.getMessage());
         }
     }
 
     private void handleSearch() {
+        if (searchField == null) return;
+        
         String text = searchField.getText();
         if (text == null || text.trim().isEmpty()) {
-            if(isSearched) {
+            if (isSearched) {
                 isSearched = false;
-                List<StockOutResponse> issueList = inventoryService.getStockOutRequests();
-                loadIssueData(issueList);
             }
             return;
         }
+        
         try {
             Long id = Long.parseLong(text.trim());
             System.out.println("Tìm kiếm với id: " + id);
@@ -166,12 +205,21 @@ public class IssueController {
             isSearched = true;
         } catch (NumberFormatException e) {
             Platform.runLater(() -> {
-                loadIssueData(null);
+                loadIssueData(new ArrayList<>());
+                isSearched = true;
+                AlertUtil.showError("Vui lòng nhập một số hợp lệ để tìm kiếm.");
             });
         } catch (AppException e) {
             Platform.runLater(() -> {
                 AlertUtil.showError(e.getMessage());
-                loadIssueData(null);
+                isSearched = true;
+                loadIssueData(new ArrayList<>()); // Truyền empty list thay vì null
+            });
+        } catch (Exception e) {
+            Platform.runLater(() -> {
+                AlertUtil.showError("Lỗi khi tìm kiếm: " + e.getMessage());
+                isSearched = true;
+                loadIssueData(new ArrayList<>()); // Truyền empty list thay vì null
             });
         }
     }
@@ -181,6 +229,8 @@ public class IssueController {
             SceneManager.switchScene(fxmlPath, getDashboardView, user, inventoryService);
         } catch (IOException e) {
             AlertUtil.showError("Lỗi khi chuyển đến trang " + viewName + ": " + e.getMessage());
+        } catch (Exception e) {
+            AlertUtil.showError("Lỗi không xác định khi chuyển trang: " + e.getMessage());
         }
     }
 
@@ -191,56 +241,71 @@ public class IssueController {
         if (Platform.isFxApplicationThread()) {
             updateUI();
         } else {
-            Platform.runLater(() -> {
-                updateUI();
-            });
+            Platform.runLater(this::updateUI);
         }
     }
 
-    public void updateUI() {
-        if (user == null) return;
+    private void updateUI() {
+        if (user == null || usernameLbl == null) return;
+        
         usernameLbl.setText(user.getUsername());
         List<StockOutResponse> issueList = inventoryService.getStockOutRequests();
         loadIssueData(issueList);
     }
 
+
     private void loadIssueData(List<StockOutResponse> issueList) {
+        if (issueTable == null) return;
+        
         try {
-            ObservableList<StockOutResponse> data = FXCollections.observableArrayList(issueList);
-            colMaXK.setCellValueFactory(new PropertyValueFactory<>("request_id"));
-            colMaNV.setCellValueFactory(new PropertyValueFactory<>("employee_id"));
-            colNgayTao.setCellValueFactory(new PropertyValueFactory<>("created_at"));
-            colNguoiDuyet.setCellValueFactory(new PropertyValueFactory<>("approved_by"));
-            colNgayDuyet.setCellValueFactory(new PropertyValueFactory<>("approved_at"));
-            colTrangThai.setCellValueFactory(new PropertyValueFactory<>("status"));
+            List<StockOutResponse> safeList = (issueList != null) ? issueList : new ArrayList<>();
+            ObservableList<StockOutResponse> data = FXCollections.observableArrayList(safeList);
             
-            issueTable.setItems(data);
+            if (Platform.isFxApplicationThread()) {
+                issueTable.setItems(data);
+            } else {
+                Platform.runLater(() -> issueTable.setItems(data));
+            }
+            
         } catch (Exception e) {
+            e.printStackTrace();
             AlertUtil.showError("Lỗi khi tải dữ liệu xuất kho: " + e.getMessage());
+            Platform.runLater(() -> {
+                if (issueTable != null) {
+                    issueTable.setItems(FXCollections.observableArrayList());
+                }
+            });
         }
     }
 
-    
-
     private void showDetailDialog(StockOutResponse stockOut) {
+        if (stockOut == null) return;
+        
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(ISSUE_DETAIL_FXML));
             DialogPane dialogPane = loader.load();
             
             IssueDetailController detailController = loader.getController();
-            detailController.initData(stockOut, inventoryService);
+            if (detailController != null) {
+                detailController.initData(stockOut, inventoryService);
+            }
             
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(dialogPane);
             dialog.setTitle("Chi tiết lệnh xuất kho - " + stockOut.getRequest_id());
             dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(issueTable.getScene().getWindow());
+            if (issueTable != null && issueTable.getScene() != null) {
+                dialog.initOwner(issueTable.getScene().getWindow());
+            }
             
             dialog.showAndWait();
             
         } catch (IOException e) {
             e.printStackTrace();
             AlertUtil.showError("Lỗi khi mở chi tiết: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertUtil.showError("Lỗi không xác định khi mở chi tiết: " + e.getMessage());
         }
     }
 }
