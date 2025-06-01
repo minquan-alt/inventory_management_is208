@@ -44,7 +44,7 @@ proc_lable: BEGIN
         IF v_product_exists = FALSE THEN
 			SET p_message = CONCAT('San pham ID ', v_product_id, ' khong ton tai');
             ROLLBACK;
-            LEAVE proc_label;
+            LEAVE proc_lable;
 		END IF;
         
         -- Them vao std
