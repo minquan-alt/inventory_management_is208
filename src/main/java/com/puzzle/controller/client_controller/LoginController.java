@@ -86,7 +86,7 @@ public class LoginController {
                                 loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardNVNKGUI.fxml"));
                                 root = loader.load();
                                 DashBoardReceiptController receiptController = loader.getController();
-                                // receiptController.initData(userResponse);
+                                receiptController.initData(userResponse, inventoryService);
                                 break;
 
                             case ROLE_ISSUE:
