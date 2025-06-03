@@ -3,6 +3,7 @@ package com.puzzle.controller.client_controller;
 import com.puzzle.dto.fx.InventoryCheckRow;
 import com.puzzle.dto.request.InventoryCheckDetailRequest;
 import com.puzzle.dto.request.InventoryCheckRequest;
+import com.puzzle.dto.response.InventoryCheckDetailResponse;
 import com.puzzle.dto.response.InventoryCheckResponse;
 import com.puzzle.dto.response.InventoryResponse;
 import com.puzzle.dto.response.UserResponse;
@@ -45,8 +46,12 @@ public class InventoryCheckController implements Initializable {
     @FXML private TableColumn<InventoryCheckRow, String> productNameColumn;
     @FXML private TableColumn<InventoryCheckRow, Integer> systemQuantityColumn;
     @FXML private TableColumn<InventoryCheckRow, Integer> actualQuantityColumn;
+    @FXML private TableColumn<InventoryCheckRow, String> noteDetailColumn;
 
     @FXML private TextField noteField;
+
+    @FXML private TableColumn<InventoryCheckResponse, Void> detailColumn;
+
 
     private InventoryService inventoryService;
     private UserResponse currentUser;
@@ -57,6 +62,38 @@ public class InventoryCheckController implements Initializable {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("checkId"));
         startDateColumn.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
         noteColumn.setCellValueFactory(new PropertyValueFactory<>("note"));
+        detailColumn.setCellFactory(col -> new TableCell<>() {
+            private final Button viewButton = new Button("Chi tiết");
+
+            {
+                viewButton.setStyle("-fx-background-color: #2196f3; -fx-text-fill: white; -fx-font-size: 10px;");
+                viewButton.setOnAction(event -> {
+                    InventoryCheckResponse response = getTableView().getItems().get(getIndex());
+                    showDetailDialog(response);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(viewButton);
+                }
+            }
+        });
+
+        inventoryCheckTable.setRowFactory(tv -> {
+            TableRow<InventoryCheckResponse> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getClickCount() == 2) {
+                    InventoryCheckResponse selectedCheck = row.getItem();
+                    showDetailDialog(selectedCheck);
+                }
+            });
+            return row;
+        });
     }
 
     public void initData(UserResponse user, InventoryService inventoryService, ProductService productService) {
@@ -74,7 +111,30 @@ public class InventoryCheckController implements Initializable {
         List<InventoryCheckResponse> data = inventoryService.getAllInventoryCheck(currentUser.getId());
         inventoryCheckTable.getItems().clear();
         inventoryCheckTable.getItems().addAll(data);
+
+
     }
+
+    private void showDetailDialog(InventoryCheckResponse checkResponse) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/GUI/ChiTietKiemKeGUI.fxml"));
+            DialogPane dialogPane = loader.load();
+
+            InventoryCheckDetailsController controller = loader.getController();
+            controller.setDetails(checkResponse.getDetails());
+
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(dialogPane);
+            dialog.setTitle("Chi tiết kiểm kê");
+            dialog.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     @FXML
     private void handleKiemKe(ActionEvent event) {
@@ -142,11 +202,17 @@ public class InventoryCheckController implements Initializable {
                 InventoryCheckRow row = eventCommit.getRowValue();
                 row.setActualQuantity(eventCommit.getNewValue());
             });
+            noteDetailColumn.setCellValueFactory(new PropertyValueFactory<>("note"));
+            noteDetailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            noteDetailColumn.setOnEditCommit(e -> {
+                InventoryCheckRow row = e.getRowValue();
+                row.setNote(e.getNewValue());
+            });
 
             productTable.setEditable(true);
             List<InventoryResponse> inventoryList = inventoryService.getInventory();
             List<InventoryCheckRow> checkRows = inventoryList.stream()
-                    .map(inv -> new InventoryCheckRow(inv.getProduct_id(), inv.getProduct_name(), inv.getQuantity(), inv.getQuantity()))
+                    .map(inv -> new InventoryCheckRow(inv.getProduct_id(), inv.getProduct_name(), inv.getQuantity(), inv.getQuantity(),"" ))
                     .collect(Collectors.toList());
             productTable.setItems(FXCollections.observableArrayList(checkRows));
 
@@ -160,7 +226,7 @@ public class InventoryCheckController implements Initializable {
                     InventoryCheckDetailRequest detail = new InventoryCheckDetailRequest();
                     detail.setProductId(row.getProductId());
                     detail.setActualQuantity(row.getActualQuantity());
-                    detail.setNote("");
+                    detail.setNote(row.getNote());
                     detailRequests.add(detail);
                 }
 

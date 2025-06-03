@@ -30,6 +30,7 @@
                 <TableColumn fx:id="productNameColumn" prefWidth="263.200018286705" text="Tên sản phẩm" />
                 <TableColumn fx:id="systemQuantityColumn" prefWidth="128.79998779296875" text="Số lượng" />
                   <TableColumn fx:id="actualQuantityColumn" prefWidth="120.79999389648435" text="Số lượng thực tế" />
+                  <TableColumn fx:id="noteDetailColumn" prefWidth="140.0" text="Ghi chú" />
               </columns>
             </TableView>
             <Label text="Ghi chú" />

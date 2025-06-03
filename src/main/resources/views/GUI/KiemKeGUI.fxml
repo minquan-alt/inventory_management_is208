@@ -63,7 +63,8 @@
             <columns>
                 <TableColumn fx:id="idColumn" prefWidth="95" text="ID"/>
                 <TableColumn fx:id="startDateColumn" prefWidth="192" text="Ngày bắt đầu"/>
-                <TableColumn fx:id="noteColumn" prefWidth="192" text="Ghi Chú"/>
+                <TableColumn fx:id="noteColumn" prefWidth="192" text="Ghi chú"/>
+                <TableColumn fx:id="detailColumn" prefWidth="90" text="Chi tiết"/>
             </columns>
         </TableView>
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="600" prefHeight="400"
+            fx:controller="com.puzzle.controller.client_controller.InventoryCheckDetailsController"
+>
+    <content>
+        <VBox spacing="10.0">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Chi tiết phiếu kiểm kê" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+            <TableView fx:id="detailTable" prefHeight="300">
+                <columns>
+                    <TableColumn fx:id="productIdCol" text="Product ID" prefWidth="100"/>
+                    <TableColumn fx:id="systemQtyCol" text="Tồn kho hệ thống" prefWidth="150"/>
+                    <TableColumn fx:id="actualQtyCol" text="Tồn kho thực tế" prefWidth="150"/>
+                    <TableColumn fx:id="adjustmentCol" text="Chênh lệch" prefWidth="100"/>
+                    <TableColumn fx:id="noteCol" text="Ghi chú" prefWidth="150"/>
+                </columns>
+            </TableView>
+        </VBox>
+
+    </content>
+    <buttonTypes>
+        <ButtonType text="Đóng" buttonData="CANCEL_CLOSE" />
+    </buttonTypes>
+</DialogPane>

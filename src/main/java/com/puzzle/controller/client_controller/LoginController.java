@@ -75,6 +75,7 @@ public class LoginController {
                                 loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardQLKGUI.fxml"));
                                 root = loader.load();
                                 DashBoardProductManagerController managerController = loader.getController();
+                                managerController.initData(userResponse, inventoryService, productService);
                                 // productController.initData(userResponse);
                                 break;
 

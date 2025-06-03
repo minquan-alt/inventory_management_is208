@@ -12,4 +12,5 @@ public class InventoryCheckRow {
     private String productName;
     private int systemQuantity;
     private Integer actualQuantity;
+    private String note;
 }

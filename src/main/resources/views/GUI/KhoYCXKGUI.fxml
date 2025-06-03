@@ -66,7 +66,8 @@
                 <TableColumn fx:id="requestIdColumn" prefWidth="74.4000244140625" text="MaYCXK" />
                 <TableColumn fx:id="productNameColumn" prefWidth="155.20001220703125" text="Tên sản phẩm" />
                 <TableColumn fx:id="quantityColumn" prefWidth="70.4000244140625" text="Số lượng" />
-                <TableColumn fx:id="statusColumn" prefWidth="85.60001220703123" text="Trạng thái" />
+                <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="120.0" />
+                <TableColumn fx:id="actionColumn" prefWidth="100.0" text="Chi tiết" />
             </columns>
         </TableView>
       <Button onAction="#handleKiemKe" layoutX="447.0" layoutY="33.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-border-width: 2; -fx-border-color: #a1d6ff; -fx-border-radius: 5;" text="KIỂM KÊ" textFill="#3d55cf">

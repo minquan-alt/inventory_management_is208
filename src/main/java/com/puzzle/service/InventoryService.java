@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -400,6 +401,13 @@ public class InventoryService {
 
             detailInventoryCheckDetails.add(detail);
 
+//            Optional<Inventory> inventory = inventoryRepository.findByProductId(productId);
+//            if (inventory.isPresent()) {
+//                Inventory inv = inventory.get();
+//                inv.setQuantity(rq.getActualQuantity());
+//                inventoryRepository.save(inv); // Lưu lại nếu cần
+//            }
+
             int adjustment = rq.getActualQuantity() - systemQuantity;
             if (adjustment != 0) {
                 InventoryLog log = InventoryLog.builder()
@@ -412,7 +420,9 @@ public class InventoryService {
                         .build();
                 inventoryLogRepository.save(log);
             }
+
         }
+
 
 
         List<InventoryCheckDetailResponse> DetailResponseList = inventoryCheckMapper.toDetailResponseList(detailInventoryCheckDetails);

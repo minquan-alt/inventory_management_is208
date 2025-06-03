@@ -1,10 +1,13 @@
 package com.puzzle.controller.client_controller;
 
+import com.puzzle.config.FXSessionManager;
 import com.puzzle.dto.response.StockInDetailsResponse;
 import com.puzzle.dto.response.StockInResponse;
 import com.puzzle.dto.response.UserResponse;
 import com.puzzle.service.InventoryService;
 import com.puzzle.service.ProductService;
+import jakarta.servlet.http.HttpSession;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
@@ -14,9 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,8 +60,69 @@ public class KhoYCNKController implements Initializable {
         requestIdColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getRequestId()));
         productNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getProductName()));
         quantityColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getQuantity()));
+
         statusColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getStatus()));
+        statusColumn.setCellFactory(col -> {
+            ComboBox<String> comboBox = new ComboBox<>();
+            return new TableCell<>() {
+                {
+                    comboBox.getItems().addAll("PENDING", "APPROVED", "DECLINED");
+                    comboBox.setOnAction(e -> {
+                        StockInDisplayRow row = getTableView().getItems().get(getIndex());
+                        String selected = comboBox.getValue();
+                        if (!row.getStatus().equals(selected)) {
+                            row.setStatus(selected);
+                            updateStatus(row.getRequestId(), selected);
+                        }
+                    });
+                }
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setGraphic(null);
+                    } else {
+                        comboBox.setValue(item);
+                        setGraphic(comboBox);
+                    }
+                }
+            };
+        });
     }
+
+
+
+    private void updateStatus(Long requestId, String newStatus) {
+        try {
+            HttpSession session = FXSessionManager.getSession(); // Lấy session thật
+
+            switch (newStatus) {
+                case "APPROVED" -> inventoryService.approveStockInRequest(requestId, session);
+                case "DECLINED" -> inventoryService.declinedStockInRequest(requestId, session);
+                default -> throw new IllegalArgumentException("Trạng thái không hợp lệ: " + newStatus);
+            }
+
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText(null);
+                alert.setContentText("Cập nhật trạng thái thành công!");
+                alert.showAndWait();
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText("Lỗi");
+                alert.setContentText("Không thể cập nhật trạng thái: " + e.getMessage());
+                alert.showAndWait();
+            });
+        }
+    }
+
+
+
 
     private void loadData() {
         List<StockInResponse> requests = inventoryService.getStockInRequests(null);
