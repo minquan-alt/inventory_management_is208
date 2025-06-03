@@ -1,6 +1,7 @@
 package com.puzzle.utils;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import javafx.fxml.FXMLLoader;
@@ -36,15 +37,23 @@ public class SceneManager {
 
 
     private static void passDataToController(Object controller, Object... args) {
-        Class<?>[] argTypes = Arrays.stream(args)
-                                .map(Object::getClass)
-                                .toArray(Class<?>[]::new);
         try {
-            controller.getClass()
-                .getMethod("initData", argTypes)
-                .invoke(controller, args);
+            // Tìm method initData với số parameter phù hợp
+            Method initDataMethod = Arrays.stream(controller.getClass().getMethods())
+                .filter(method -> method.getName().equals("initData"))
+                .filter(method -> method.getParameterCount() == args.length)
+                .findFirst()
+                .orElse(null);
+                
+            if (initDataMethod != null) {
+                initDataMethod.setAccessible(true);
+                initDataMethod.invoke(controller, args);
+            } else {
+                System.err.println("No initData method found with " + args.length + " parameters");
+            }
         } catch (Exception e) {
             System.err.println("Could not pass data to controller: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
