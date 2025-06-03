@@ -75,14 +75,14 @@ public class LoginController {
                                 loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardQLKGUI.fxml"));
                                 root = loader.load();
                                 DashBoardProductManagerController managerController = loader.getController();
-                                managerController.initData(userResponse, inventoryService, productService);
+                                // productController.initData(userResponse);
                                 break;
 
                             case ROLE_HUMAN_MANAGEMENT:
-                                loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardQLGUI.fxml"));
+                                loader = new FXMLLoader(getClass().getResource("/views/GUI/NhanVienGUI.fxml"));
                                 root = loader.load();
-                                DashBoardHumanManagerController humanController = loader.getController();
-                                // humanController.initData(userResponse);
+                                HumanManagerController humanController = loader.getController();
+                                humanController.initData(userService, userResponse);
                                 break;
 
                             case ROLE_RECEIPT:

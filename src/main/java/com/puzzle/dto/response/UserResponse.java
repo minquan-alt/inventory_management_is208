@@ -19,4 +19,5 @@ public class UserResponse {
     String name;
     String username;
     Role role;
+    String status;
 }

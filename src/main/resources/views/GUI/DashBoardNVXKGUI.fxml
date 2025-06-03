@@ -68,7 +68,7 @@
                 <NumberAxis fx:id="yAxis" side="LEFT" />
             </yAxis>
         </BarChart>
-        <Label layoutX="157.0" layoutY="159.0" prefHeight="27.0" prefWidth="123.0" text="Biểu đồ tháng">
+        <Label layoutX="157.0" layoutY="159.0" prefHeight="27.0" text="Biểu đồ tồn kho">
             <font>
                 <Font name="Arial Bold" size="18.0" />
             </font>

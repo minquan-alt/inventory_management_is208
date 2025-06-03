@@ -59,7 +59,8 @@ public class InventoryService {
     @Autowired
     private ProductService productService;
 
-    @Autowired UserService userService;
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -292,9 +293,13 @@ public class InventoryService {
 
         userService.getUser(employee_id);
 
-        String productJson = objectMapper.writeValueAsString(request.getProducts());
-
-        return stockInRepository.createStockInRequest(employee_id, productJson);
+        try {
+            String productJson = objectMapper.writeValueAsString(request.getProducts());
+            System.out.println();
+            return stockInRepository.createStockInRequest(employee_id, productJson);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.ERROR_IN_CREATE_STOCK_IN_REQUEST_PROCESS);
+        }
     }
 
      public StockInResponse approveStockInRequest(long stock_request_id, HttpSession session) {

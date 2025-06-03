@@ -11,6 +11,7 @@ import com.puzzle.exception.ErrorCode;
 import com.puzzle.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,13 @@ public class UserService {
 
     public static UserResponse mapUserResponse(User user) {
         // UserResponse userResponse = new UserResponse();
-
-        return new UserResponse(user.getId(), user.getName() ,user.getUsername(), user.getRole());
+        String status;
+        if(user.getStatus()) {
+            status = "Đang hoạt động";
+        } else {
+            status = "Ngưng hoạt động";
+        }
+        return new UserResponse(user.getId(), user.getName() ,user.getUsername(), user.getRole(), status);
     }
 
     public List<UserResponse> getUsers() {
@@ -63,8 +69,43 @@ public class UserService {
         return mapUserResponse(result);
     }
 
+    public UserResponse updateUser(UserResponse request) {
+        User updateUser = userRepository.findById(request.getId())
+            .orElseThrow(() -> {
+                return new AppException(ErrorCode.USER_NOT_FOUND);
+            });
+
+        updateUser.setUsername(request.getUsername());
+        updateUser.setRole(request.getRole());
+        updateUser.setName(request.getName());
+        User result = userRepository.save(updateUser);
+        
+        return mapUserResponse(result);
+    }
+
+
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        try {
+            userRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw e;
+        }
+    }
+
+    public List<UserResponse> searchUsers(String queryName) {
+        try {
+            List<User> users = userRepository.findByNameContainingIgnoreCase(queryName);
+            if(users.isEmpty()) {
+                return null;
+            }
+            return users
+                .stream()
+                .map(user ->  mapUserResponse(user))
+                .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.getStackTrace();
+            throw e;
+        }
     }
 
 }

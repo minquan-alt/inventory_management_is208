@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 })
 public class User {
 
-    public enum Role {
+    public static enum Role {
     ROLE_PRODUCT_MANAGEMENT,
     ROLE_HUMAN_MANAGEMENT,
     ROLE_RECEIPT,
