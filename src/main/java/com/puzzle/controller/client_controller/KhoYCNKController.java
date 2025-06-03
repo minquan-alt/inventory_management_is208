@@ -1,11 +1,20 @@
 package com.puzzle.controller.client_controller;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
 import com.puzzle.config.FXSessionManager;
 import com.puzzle.dto.response.StockInDetailsResponse;
 import com.puzzle.dto.response.StockInResponse;
 import com.puzzle.dto.response.UserResponse;
 import com.puzzle.service.InventoryService;
 import com.puzzle.service.ProductService;
+
+import org.springframework.stereotype.Controller;
+
 import jakarta.servlet.http.HttpSession;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -17,19 +26,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Controller;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
 
 @Controller
 public class KhoYCNKController implements Initializable {
@@ -122,10 +129,8 @@ public class KhoYCNKController implements Initializable {
     }
 
 
-
-
     private void loadData() {
-        List<StockInResponse> requests = inventoryService.getStockInRequests(null);
+        List<StockInResponse> requests = inventoryService.getStockInRequests();
         List<StockInDisplayRow> rows = new ArrayList<>();
 
         for (StockInResponse req : requests) {

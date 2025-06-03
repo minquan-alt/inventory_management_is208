@@ -249,13 +249,16 @@ public class InventoryService {
 
     public StockInDetailsResponse mapToStockInRequestDetailsResponse(StockRequestDetails details) {
         return StockInDetailsResponse.builder()
-            .id(details.getId())
-            .request_id(details.getStockRequests().getId())
-            .product_id(details.getProduct().getProduct_id())
-            .quantity(details.getQuantity())
-            .unit_cost(details.getUnitPrice())
-            .build();
+                .id(details.getId())
+                .request_id(details.getStockRequests().getId())
+                .product_id(details.getProduct().getProduct_id())
+                .product_name(details.getProduct().getName())
+                .unit(details.getProduct().getUnit())          
+                .quantity(details.getQuantity())
+                .unit_cost(details.getUnitPrice())
+                .build();
     }
+
 
         public StockInResponse mapToStockInRequestsResponse(StockRequests stockRequests) {
         return StockInResponse.builder()
@@ -276,7 +279,7 @@ public class InventoryService {
             .collect(Collectors.toList());
     }
 
-    public List<StockInResponse> getStockInRequests(HttpSession session) {
+    public List<StockInResponse> getStockInRequests() {
         List<StockRequests> results = stockRequestsRepository.findByRequestType(RequestType.IN)
             .orElseThrow(() -> new AppException(ErrorCode.STOCK_IN_REQUEST_NOT_FOUND));
         return results.stream()
@@ -462,5 +465,16 @@ public class InventoryService {
         return inventoryCheckMapper.toCheckResponse(check);    
     }
 
-    
+
+    public List<StockInResponse> getStockInRequestById(Long id) {
+        List<StockRequests> results = stockRequestsRepository.findByIdAndRequestType(id, RequestType.IN)
+                .orElseThrow(() -> {
+                    throw new AppException(ErrorCode.STOCK_IN_REQUEST_NOT_FOUND);
+                });
+
+        return results.stream()
+                .map(this::mapToStockInRequestsResponse)
+                .collect(Collectors.toList());
+    }
+
 }

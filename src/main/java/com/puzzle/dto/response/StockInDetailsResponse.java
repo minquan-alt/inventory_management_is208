@@ -15,6 +15,8 @@ public class StockInDetailsResponse {
     long id;
     long request_id;
     long product_id;
+    String product_name;
+    String unit;
     int quantity; 
     BigDecimal unit_cost;
 }
