@@ -25,7 +25,6 @@ public class AlertUtil {
         showAlert(AlertType.WARNING, title, message);
     }
 
-
     private static void showAlert(AlertType alertType, String title, String message) {
         Platform.runLater(() -> {
             Alert alert = new Alert(alertType);

@@ -19,8 +19,8 @@ CREATE TABLE products (
     name VARCHAR(255) NOT NULL,
     description TEXT,
     unit VARCHAR(50),
-    -- cost_price DECIMAL(10, 2) DEFAULT 0,
-    -- selling_price DECIMAL(10, 2) DEFAULT 0
+    cost_price DECIMAL(10, 2) DEFAULT 0,
+    selling_price DECIMAL(10, 2) DEFAULT 0
 );
 
 CREATE TABLE stock_requests (

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@../../static/css/style.css" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.doanqlda.NhanVienController">
+<AnchorPane stylesheets="@../../static/css/style.css" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.HumanManagerController">
     <children>
         <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="377.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
             <font>
@@ -25,12 +25,7 @@
                 <Cursor fx:constant="DEFAULT" />
             </cursor>
         </Label>
-        <Button layoutX="13.0" layoutY="141.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF;" text="DASHBOARD">
-            <font>
-                <Font name="Arial Bold" size="12.0" />
-            </font>
-        </Button>
-        <Label layoutX="57.0" layoutY="354.0" text="UserName" />
+        <Label fx:id="menu_username" layoutX="57.0" layoutY="354.0" text="UserName" />
         <Label layoutX="146.0" layoutY="11.0" prefHeight="378.0" prefWidth="438.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
         <Button layoutX="13.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #0924bc;" text="NHÂN VIÊN" textFill="WHITE">
             <font>
@@ -40,23 +35,26 @@
                 <Insets />
             </opaqueInsets>
         </Button>
-        <TextField layoutX="203.0" layoutY="21.0" prefHeight="26.0" prefWidth="354.0" promptText="Search" />
-        <TableView layoutX="172.0" layoutY="93.0" prefHeight="282.0" prefWidth="386.0">
+        <TextField fx:id="searchUsers" layoutX="203.0" layoutY="21.0" prefHeight="26.0" prefWidth="354.0" promptText="Search by name" />
+        <TableView fx:id="tableView" layoutX="172.0" layoutY="93.0" prefHeight="282.0" prefWidth="386.0">
             <columns>
-                <TableColumn prefWidth="163.20001220703125" text="Họ và tên" />
-                <TableColumn prefWidth="68.00006103515625" text="Chức vụ" />
-                <TableColumn prefWidth="76.800048828125" text="Trạng thái" />
-            <TableColumn prefWidth="74.4000244140625" text="Hành động" />
+                <TableColumn fx:id="colId" prefWidth="76.800048828125" text="Mã nhân viên" />
+                <TableColumn fx:id="colName" prefWidth="163.20001220703125" text="Họ và tên" />
+                <TableColumn fx:id="colUsername" prefWidth="163.20001220703125" text="Tên đăng nhập" />
+                <TableColumn fx:id="colRole" prefWidth="68.00006103515625" text="Chức vụ" />
+                <TableColumn fx:id="colStatus" prefWidth="76.800048828125" text="Trạng thái" />
+                <TableColumn fx:id="colUpdate" prefWidth="76.800048828125" text="Sửa" />
+                <TableColumn fx:id="colDelete" prefWidth="76.800048828125" text="Xoá" />
             </columns>
         </TableView>
-        <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="172.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fx:id="searchIcon" fitHeight="26.0" fitWidth="26.0" layoutX="172.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@../../../../../../../../search-vector-icon.jpg" />
+                <Image url="@/static/images/search-vector-icon.jpg" />
             </image>
         </ImageView>
         <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="22.0" layoutY="352.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@../../../../../../../OIP.jpeg" />
+                <Image url="@/static/images/OIP.jpeg" />
             </image>
         </ImageView>
         <Label layoutX="172.0" layoutY="56.0" text="Danh sách nhân viên">
@@ -64,6 +62,6 @@
                 <Font name="Arial Bold" size="15.0" />
             </font>
         </Label>
-        <Button layoutX="470.0" layoutY="60.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="87.0" style="-fx-background-color: #46a0ef;" text="Thêm" textFill="WHITE" />
+        <Button fx:id="addUser" layoutX="470.0" layoutY="60.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="87.0" style="-fx-background-color: #46a0ef;" text="Thêm" textFill="WHITE" />
     </children>
 </AnchorPane>

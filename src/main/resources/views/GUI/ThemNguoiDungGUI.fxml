@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.puzzle.controller.client_controller.HumanAddController">
+   <content>
+      <VBox prefHeight="300.0" prefWidth="450.0" spacing="10.0">
+         <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+         </padding>
+
+         <!-- Tiêu đề -->
+         <Label text="CẬP NHẬT THÔNG TIN NGƯỜI DÙNG" style="-fx-font-weight:bold;">
+            <font>
+               <Font size="16"/>
+            </font>
+         </Label>
+         <Separator/>
+
+         <!-- Form -->
+         <GridPane hgap="10.0" vgap="8.0">
+            <columnConstraints>
+               <ColumnConstraints minWidth="120.0" hgrow="NEVER"/>
+               <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+
+            <children>
+               <!-- Tên -->
+               <Label text="Tên:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+               <TextField fx:id="txtName" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+               <!-- Username -->
+               <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+               <TextField fx:id="txtUsername" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <!-- Password -->
+               <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+               <PasswordField fx:id="txtPassword" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+               <!-- Vai trò -->
+               <Label text="Vai trò:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+               <ComboBox fx:id="cmbRole" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            </children>
+         </GridPane>
+      </VBox>
+   </content>
+
+   <!-- Nút Apply / Close -->
+   <buttonTypes>
+      <ButtonType fx:constant="APPLY"/>
+      <ButtonType fx:constant="CANCEL"/>
+   </buttonTypes>
+</DialogPane>

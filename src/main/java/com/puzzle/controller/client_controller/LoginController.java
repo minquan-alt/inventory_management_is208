@@ -38,6 +38,7 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    
 
 
     @FXML
@@ -76,10 +77,10 @@ public class LoginController {
                                 break;
 
                             case ROLE_HUMAN_MANAGEMENT:
-                                loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardQLGUI.fxml"));
+                                loader = new FXMLLoader(getClass().getResource("/views/GUI/NhanVienGUI.fxml"));
                                 root = loader.load();
-                                DashBoardHumanManagerController humanController = loader.getController();
-                                // humanController.initData(userResponse);
+                                HumanManagerController humanController = loader.getController();
+                                humanController.initData(userService, userResponse);
                                 break;
 
                             case ROLE_RECEIPT:
