@@ -25,15 +25,15 @@
           <RowConstraints maxHeight="362.00000228881834" minHeight="10.0" prefHeight="362.00000228881834" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TableView prefHeight="354.0" prefWidth="439.0" GridPane.rowIndex="3">
+            <TableView fx:id="productTable" prefHeight="354.0" prefWidth="439.0" GridPane.rowIndex="3">
               <columns>
-                <TableColumn prefWidth="263.200018286705" text="Tên sản phẩm" />
-                <TableColumn prefWidth="128.79998779296875" text="Số lượng" />
-                  <TableColumn prefWidth="120.79999389648435" text="Số lượng thực tế" />
+                <TableColumn fx:id="productNameColumn" prefWidth="263.200018286705" text="Tên sản phẩm" />
+                <TableColumn fx:id="systemQuantityColumn" prefWidth="128.79998779296875" text="Số lượng" />
+                  <TableColumn fx:id="actualQuantityColumn" prefWidth="120.79999389648435" text="Số lượng thực tế" />
               </columns>
             </TableView>
-            <Label text="ID" />
-            <TextField maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="175.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Label text="Ghi chú" />
+            <TextField fx:id="noteField" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="175.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
             <Label text="Ngày bắt đầu" GridPane.rowIndex="1" />
             <DatePicker GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             <Label text="Bảng sản phẩm" GridPane.rowIndex="2" />

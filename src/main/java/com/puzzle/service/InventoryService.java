@@ -49,6 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class InventoryService {
@@ -418,6 +419,7 @@ public class InventoryService {
 
     }
 
+    @Transactional
     public List<InventoryCheckResponse> getAllInventoryCheck(Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -429,6 +431,7 @@ public class InventoryService {
 
         return inventoryCheckMapper.toListCheckResponse(inventoryCheckRepository.findAll());
     }
+
 
     public InventoryCheckResponse getInventoryCheck(Long userId, Long inventoryCheckId){
         User user = userRepository.findById(userId)

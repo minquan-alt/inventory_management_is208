@@ -8,6 +8,7 @@ import com.puzzle.entity.User;
 import com.puzzle.exception.AppException;
 import com.puzzle.service.AuthenticationService;
 import com.puzzle.service.InventoryService;
+import com.puzzle.service.ProductService;
 import com.puzzle.service.UserService;
 import com.puzzle.utils.AlertUtil;
 
@@ -38,6 +39,8 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ProductService productService;
 
 
     @FXML
@@ -72,7 +75,7 @@ public class LoginController {
                                 loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardQLKGUI.fxml"));
                                 root = loader.load();
                                 DashBoardProductManagerController managerController = loader.getController();
-                                // productController.initData(userResponse);
+                                managerController.initData(userResponse, inventoryService, productService);
                                 break;
 
                             case ROLE_HUMAN_MANAGEMENT:

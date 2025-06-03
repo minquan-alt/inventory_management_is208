@@ -22,4 +22,10 @@ public class ProductService {
         }
         return products;
     }
+
+    public String getProductNameById(long id) {
+        return productRepository.findById(id)
+                .map(Product::getName)
+                .orElse("Không rõ");
+    }
 }
