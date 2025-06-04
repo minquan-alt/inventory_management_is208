@@ -10,6 +10,7 @@ import com.puzzle.dto.response.UserResponse;
 import com.puzzle.service.InventoryService;
 import com.puzzle.service.ProductService;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -108,12 +109,28 @@ public class InventoryCheckController implements Initializable {
 
     private void loadInventoryChecks() {
         if (currentUser == null || inventoryService == null) return;
-        List<InventoryCheckResponse> data = inventoryService.getAllInventoryCheck(currentUser.getId());
-        inventoryCheckTable.getItems().clear();
-        inventoryCheckTable.getItems().addAll(data);
 
+        Task<List<InventoryCheckResponse>> task = new Task<>() {
+            @Override
+            protected List<InventoryCheckResponse> call() {
+                return inventoryService.getAllInventoryCheck(currentUser.getId());
+            }
+        };
 
+        task.setOnSucceeded(event -> {
+            List<InventoryCheckResponse> data = task.getValue();
+            inventoryCheckTable.getItems().clear();
+            inventoryCheckTable.getItems().addAll(data);
+        });
+
+        task.setOnFailed(event -> {
+            System.err.println("Lỗi khi tải kiểm kê: " + task.getException().getMessage());
+            task.getException().printStackTrace();
+        });
+
+        new Thread(task).start();
     }
+
 
     private void showDetailDialog(InventoryCheckResponse checkResponse) {
         try {
@@ -126,12 +143,18 @@ public class InventoryCheckController implements Initializable {
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(dialogPane);
             dialog.setTitle("Chi tiết kiểm kê");
+
+
+            Stage ownerStage = (Stage) inventoryCheckTable.getScene().getWindow();
+            dialog.initOwner(ownerStage);
+
             dialog.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
 
 
@@ -184,69 +207,89 @@ public class InventoryCheckController implements Initializable {
 
     @FXML
     private void handleTaoKiemKe(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Form/KiemKeForm.fxml"));
-            loader.setController(this);
-            DialogPane dialogPane = loader.load();
+        Task<List<InventoryCheckRow>> task = new Task<>() {
+            @Override
+            protected List<InventoryCheckRow> call() {
+                List<InventoryResponse> inventoryList = inventoryService.getInventory();
+                return inventoryList.stream()
+                        .map(inv -> new InventoryCheckRow(
+                                inv.getProduct_id(),
+                                inv.getProduct_name(),
+                                inv.getQuantity(),
+                                inv.getQuantity(),
+                                ""
+                        ))
+                        .collect(Collectors.toList());
+            }
+        };
 
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setDialogPane(dialogPane);
-            dialog.setTitle("Tạo kiểm kê");
+        task.setOnSucceeded(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Form/KiemKeForm.fxml"));
+                loader.setController(this);
+                DialogPane dialogPane = loader.load();
 
-            // Setup table columns
-            productNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
-            systemQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("systemQuantity"));
-            actualQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("actualQuantity"));
-            actualQuantityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-            actualQuantityColumn.setOnEditCommit(eventCommit -> {
-                InventoryCheckRow row = eventCommit.getRowValue();
-                row.setActualQuantity(eventCommit.getNewValue());
-            });
-            noteDetailColumn.setCellValueFactory(new PropertyValueFactory<>("note"));
-            noteDetailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-            noteDetailColumn.setOnEditCommit(e -> {
-                InventoryCheckRow row = e.getRowValue();
-                row.setNote(e.getNewValue());
-            });
+                // Cài đặt dialog
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setDialogPane(dialogPane);
+                dialog.setTitle("Tạo kiểm kê");
 
-            productTable.setEditable(true);
-            List<InventoryResponse> inventoryList = inventoryService.getInventory();
-            List<InventoryCheckRow> checkRows = inventoryList.stream()
-                    .map(inv -> new InventoryCheckRow(inv.getProduct_id(), inv.getProduct_name(), inv.getQuantity(), inv.getQuantity(),"" ))
-                    .collect(Collectors.toList());
-            productTable.setItems(FXCollections.observableArrayList(checkRows));
+                // Cài đặt bảng
+                productNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
+                systemQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("systemQuantity"));
+                actualQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("actualQuantity"));
+                actualQuantityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+                actualQuantityColumn.setOnEditCommit(eventCommit -> {
+                    InventoryCheckRow row = eventCommit.getRowValue();
+                    row.setActualQuantity(eventCommit.getNewValue());
+                });
 
-            Optional<ButtonType> result = dialog.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
+                noteDetailColumn.setCellValueFactory(new PropertyValueFactory<>("note"));
+                noteDetailColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+                noteDetailColumn.setOnEditCommit(e2 -> {
+                    InventoryCheckRow row = e2.getRowValue();
+                    row.setNote(e2.getNewValue());
+                });
 
-                String noteText = noteField.getText().trim();
+                productTable.setEditable(true);
+                productTable.setItems(FXCollections.observableArrayList(task.getValue()));
 
-                List<InventoryCheckDetailRequest> detailRequests = new ArrayList<>();
-                for (InventoryCheckRow row : productTable.getItems()) {
-                    InventoryCheckDetailRequest detail = new InventoryCheckDetailRequest();
-                    detail.setProductId(row.getProductId());
-                    detail.setActualQuantity(row.getActualQuantity());
-                    detail.setNote(row.getNote());
-                    detailRequests.add(detail);
+                Optional<ButtonType> result = dialog.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    String noteText = noteField.getText().trim();
+
+                    List<InventoryCheckDetailRequest> detailRequests = productTable.getItems().stream()
+                            .map(row -> new InventoryCheckDetailRequest(
+                                    row.getProductId(),
+                                    row.getActualQuantity(),
+                                    row.getNote()))
+                            .collect(Collectors.toList());
+
+                    InventoryCheckRequest request = new InventoryCheckRequest();
+                    request.setNote(noteText.isEmpty() ? "Kiểm kê định kỳ" : noteText);
+                    request.setInventoryCheckDetailRequests(detailRequests);
+
+                    inventoryService.createCheck(currentUser.getId(), request);
+                    loadInventoryChecks();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Thành công");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Tạo phiếu kiểm kê thành công!");
+                    alert.showAndWait();
                 }
 
-                InventoryCheckRequest request = new InventoryCheckRequest();
-                request.setNote(noteText.isEmpty() ? "Kiểm kê định kỳ" : noteText);
-                request.setInventoryCheckDetailRequests(detailRequests);
-
-                inventoryService.createCheck(currentUser.getId(), request);
-                loadInventoryChecks();
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Thành công");
-                alert.setHeaderText(null);
-                alert.setContentText("Tạo phiếu kiểm kê thành công!");
-                alert.showAndWait();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
+        });
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        task.setOnFailed(e -> {
+            System.err.println("Lỗi khi load inventory cho kiểm kê: " + task.getException().getMessage());
+        });
+
+        new Thread(task).start();
     }
+
 
 }

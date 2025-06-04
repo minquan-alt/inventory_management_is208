@@ -7,6 +7,7 @@ import com.puzzle.service.InventoryService;
 import com.puzzle.service.ProductService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,33 +55,43 @@ public class DashBoardProductManagerController {
             Platform.runLater(this::updateDashboard);
         }
     }
-
     private void updateDashboard() {
         if (currentUser != null) {
             welcomeLabel.setText("Hello " + currentUser.getName() + ", welcome back!");
             userNameLabel.setText(currentUser.getUsername());
         }
 
-        List<InventoryResponse> inventoryList = inventoryService.getInventory();
-        if (inventoryList == null || inventoryList.isEmpty()) {
-            inventoryLabel.setText("0");
-            lowStockLabel.setText("0");
-            return;
-        }
+        Task<List<InventoryResponse>> task = new Task<>() {
+            @Override
+            protected List<InventoryResponse> call() {
+                return inventoryService.getInventory();
+            }
+        };
 
-        int totalQuantity = inventoryList.stream()
-                .mapToInt(InventoryResponse::getQuantity)
-                .sum();
+        task.setOnSucceeded(event -> {
+            List<InventoryResponse> inventoryList = task.getValue();
+            if (inventoryList == null || inventoryList.isEmpty()) {
+                inventoryLabel.setText("0");
+                lowStockLabel.setText("0");
+                return;
+            }
 
-        long lowStockCount = inventoryList.stream()
-                .filter(i -> i.getQuantity() < LOW_STOCK_THRESHOLD)
-                .count();
+            int totalQuantity = inventoryList.stream().mapToInt(InventoryResponse::getQuantity).sum();
+            long lowStockCount = inventoryList.stream().filter(i -> i.getQuantity() < LOW_STOCK_THRESHOLD).count();
 
-        inventoryLabel.setText(String.valueOf(totalQuantity));
-        lowStockLabel.setText(String.valueOf(lowStockCount));
+            inventoryLabel.setText(String.valueOf(totalQuantity));
+            lowStockLabel.setText(String.valueOf(lowStockCount));
 
-        renderChart(inventoryList);
+            renderChart(inventoryList);
+        });
+
+        task.setOnFailed(e -> {
+            System.err.println("Lỗi tải dữ liệu dashboard: " + task.getException().getMessage());
+        });
+
+        new Thread(task).start();
     }
+
 
     private void renderChart(List<InventoryResponse> inventoryList) {
         if (monthlyChart == null || xAxis == null) return;

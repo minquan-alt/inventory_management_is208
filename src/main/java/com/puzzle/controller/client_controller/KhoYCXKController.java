@@ -13,6 +13,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -118,31 +119,39 @@ public class KhoYCXKController implements Initializable {
     }
 
     private void showDetailDialog(Long requestId) {
-        try {
-            List<StockOutResponse> listStock = inventoryService.getStockOutRequestById(requestId);
-            if (listStock.isEmpty()) {
-                throw new RuntimeException("Không tìm thấy đơn hàng");
+        Task<StockOutResponse> loadTask = new Task<>() {
+            @Override
+            protected StockOutResponse call() {
+                List<StockOutResponse> list = inventoryService.getStockOutRequestById(requestId);
+                return list.isEmpty() ? null : list.get(0);
             }
-            StockOutResponse stockOut = listStock.get(0);
+        };
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/GUI/ChiTietXuatKhoGUI.fxml"));
-            Parent root = loader.load();
+        loadTask.setOnSucceeded(event -> {
+            StockOutResponse stockOut = loadTask.getValue();
+            if (stockOut == null) return;
 
-            IssueDetailController controller = loader.getController();
-            controller.initData(stockOut, inventoryService);
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/GUI/ChiTietXuatKhoGUI.fxml"));
+                DialogPane dialogPane = loader.load();
 
-            Stage stage = new Stage();
-            stage.setTitle("Chi tiết xuất kho");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Lỗi");
-            alert.setContentText("Không thể hiển thị chi tiết: " + e.getMessage());
-            alert.showAndWait();
-        }
+                IssueDetailController controller = loader.getController();
+                controller.initData(stockOut, inventoryService);
+
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setDialogPane(dialogPane);
+                dialog.setTitle("Chi tiết xuất kho");
+                dialog.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        loadTask.setOnFailed(e -> loadTask.getException().printStackTrace());
+
+        new Thread(loadTask).start();
     }
+
 
 
     private void updateStatus(Long requestId, String newStatus) {
@@ -174,25 +183,39 @@ public class KhoYCXKController implements Initializable {
     }
 
     private void loadData() {
-        List<StockOutResponse> requests = inventoryService.getStockOutRequests();
-        List<StockOutDisplayRow> rows = new ArrayList<>();
+        Task<List<StockOutDisplayRow>> task = new Task<>() {
+            @Override
+            protected List<StockOutDisplayRow> call() {
+                List<StockOutDisplayRow> rows = new ArrayList<>();
+                List<StockOutResponse> requests = inventoryService.getStockOutRequests();
 
-        for (StockOutResponse req : requests) {
-            List<StockOutDetailsResponse> details = inventoryService.getStockOutDetailsResponses(req.getRequest_id());
-
-            for (StockOutDetailsResponse detail : details) {
-                String productName = productService.getProductNameById(detail.getProduct_id());
-                rows.add(StockOutDisplayRow.builder()
-                        .requestId(req.getRequest_id())
-                        .productName(productName)
-                        .quantity(detail.getQuantity())
-                        .status(req.getStatus())
-                        .build());
+                for (StockOutResponse req : requests) {
+                    List<StockOutDetailsResponse> details = inventoryService.getStockOutDetailsResponses(req.getRequest_id());
+                    for (StockOutDetailsResponse detail : details) {
+                        String productName = productService.getProductNameById(detail.getProduct_id());
+                        rows.add(StockOutDisplayRow.builder()
+                                .requestId(req.getRequest_id())
+                                .productName(productName)
+                                .quantity(detail.getQuantity())
+                                .status(req.getStatus())
+                                .build());
+                    }
+                }
+                return rows;
             }
-        }
+        };
 
-        stockOutTable.getItems().setAll(rows);
+        task.setOnSucceeded(e -> {
+            stockOutTable.getItems().setAll(task.getValue());
+        });
+
+        task.setOnFailed(e -> {
+            e.getSource().getException().printStackTrace();
+        });
+
+        new Thread(task).start();
     }
+
 
     @Data
     @Builder
