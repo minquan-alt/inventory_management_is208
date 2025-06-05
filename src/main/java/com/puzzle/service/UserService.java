@@ -75,9 +75,14 @@ public class UserService {
                 return new AppException(ErrorCode.USER_NOT_FOUND);
             });
 
+        Boolean updateStatus = false;
         updateUser.setUsername(request.getUsername());
         updateUser.setRole(request.getRole());
         updateUser.setName(request.getName());
+        if(request.getStatus() == "Đang hoạt động") {
+            updateStatus = true;
+        }
+        updateUser.setStatus(updateStatus);
         User result = userRepository.save(updateUser);
         
         return mapUserResponse(result);

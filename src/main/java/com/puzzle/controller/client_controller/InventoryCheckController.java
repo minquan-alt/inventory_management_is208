@@ -1,37 +1,47 @@
 package com.puzzle.controller.client_controller;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
 import com.puzzle.dto.fx.InventoryCheckRow;
 import com.puzzle.dto.request.InventoryCheckDetailRequest;
 import com.puzzle.dto.request.InventoryCheckRequest;
-import com.puzzle.dto.response.InventoryCheckDetailResponse;
 import com.puzzle.dto.response.InventoryCheckResponse;
 import com.puzzle.dto.response.InventoryResponse;
 import com.puzzle.dto.response.UserResponse;
 import com.puzzle.service.InventoryService;
 import com.puzzle.service.ProductService;
+import com.puzzle.utils.AlertUtil;
+import com.puzzle.utils.SceneManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
-import org.springframework.stereotype.Controller;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 @Controller
 public class InventoryCheckController implements Initializable {
@@ -53,13 +63,26 @@ public class InventoryCheckController implements Initializable {
 
     @FXML private TableColumn<InventoryCheckResponse, Void> detailColumn;
 
-
-    private InventoryService inventoryService;
     private UserResponse currentUser;
+
+    @Autowired
+    private InventoryService inventoryService;
+    @Autowired
     private ProductService productService;
+
+    // Constants for FXML paths
+    private static final String LOGIN_FXML = "/views/GUI/LoginGUI.fxml";
+    private static final String KIEM_KE_FXML = "/views/GUI/KiemKeGUI.fxml";
+    private static final String YEU_CAU_XUAT_KHO_FXML = "/views/GUI/KhoYCXKGUI.fxml";
+    private static final String YEU_CAU_NHAP_KHO_FXML = "/views/GUI/KhoYCNKGUI.fxml";
+    private static final String DASHBOARD_FXML = "/views/GUI/DashBoardQLKGUI.fxml";
+    private static final String PRODUCT_MANAGER_FXML = "/views/GUI/SanPhamGUI.fxml";
+
+    @FXML private Button logoutButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setupEventHandlers();
         idColumn.setCellValueFactory(new PropertyValueFactory<>("checkId"));
         startDateColumn.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
         noteColumn.setCellValueFactory(new PropertyValueFactory<>("note"));
@@ -97,13 +120,32 @@ public class InventoryCheckController implements Initializable {
         });
     }
 
-    public void initData(UserResponse user, InventoryService inventoryService, ProductService productService) {
+    private void setupEventHandlers() {
+        logoutButton.setOnAction(event -> handleLogout());
+    }
+
+    private void handleLogout() {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Xác nhận đăng xuất");
+        confirmAlert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
+        
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            handleViewSwitch(LOGIN_FXML, "Đăng nhập");
+        }
+    }
+
+    public void handleViewSwitch(String fxmlPath, String viewName) {
+        try {
+            SceneManager.switchScene(fxmlPath, logoutButton, currentUser);
+        } catch (IOException e) {
+            AlertUtil.showError("Lỗi khi chuyển đến trang " + viewName + ": " + e.getMessage());
+        }
+    }
+
+    public void initData(UserResponse user) {
         this.currentUser = user;
-        this.inventoryService = inventoryService;
-        this.productService = productService;
-
         userNameLabel.setText(user.getName());
-
         loadInventoryChecks();
     }
 
@@ -131,7 +173,6 @@ public class InventoryCheckController implements Initializable {
         new Thread(task).start();
     }
 
-
     private void showDetailDialog(InventoryCheckResponse checkResponse) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/GUI/ChiTietKiemKeGUI.fxml"));
@@ -144,7 +185,6 @@ public class InventoryCheckController implements Initializable {
             dialog.setDialogPane(dialogPane);
             dialog.setTitle("Chi tiết kiểm kê");
 
-
             Stage ownerStage = (Stage) inventoryCheckTable.getScene().getWindow();
             dialog.initOwner(ownerStage);
 
@@ -155,54 +195,29 @@ public class InventoryCheckController implements Initializable {
         }
     }
 
-
-
-
-
     @FXML
     private void handleKiemKe(ActionEvent event) {
-        loadScene("/views/GUI/KiemKeGUI.fxml", event);
+        handleViewSwitch(KIEM_KE_FXML, "Kiểm kê");
     }
 
     @FXML
     private void handleYeuCauXuatKho(ActionEvent event) {
-        loadScene("/views/GUI/KhoYCXKGUI.fxml", event);
+        handleViewSwitch(YEU_CAU_XUAT_KHO_FXML, "Yêu cầu xuất kho");
     }
 
     @FXML
     private void handleYeuCauNhapKho(ActionEvent event) {
-        loadScene("/views/GUI/KhoYCNKGUI.fxml", event);
+        handleViewSwitch(YEU_CAU_NHAP_KHO_FXML, "Yêu cầu nhập kho");
     }
 
     @FXML
     private void handleDashboard(ActionEvent event) {
-        loadScene("/views/GUI/DashBoardQLKGUI.fxml", event);
+        handleViewSwitch(DASHBOARD_FXML, "Dashboard");
     }
 
-    private void loadScene(String fxmlPath, ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Parent root = loader.load();
-
-            Object controller = loader.getController();
-
-            if (controller instanceof KhoYCNKController) {
-                ((KhoYCNKController) controller).initData(currentUser, inventoryService, productService);
-            } else if (controller instanceof DashBoardProductManagerController dash) {
-                dash.initData(currentUser, inventoryService, productService);
-            } else if (controller instanceof KhoYCXKController xk) {
-                xk.initData(currentUser, inventoryService, productService);
-            } else if (controller instanceof InventoryCheckController) {
-                ((InventoryCheckController) controller).initData(currentUser, inventoryService, productService);
-            }
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @FXML
+    private void handleGoToProductManagerController(ActionEvent event) {
+        handleViewSwitch(PRODUCT_MANAGER_FXML, "Quản lý sản phẩm");
     }
 
     @FXML
@@ -229,12 +244,10 @@ public class InventoryCheckController implements Initializable {
                 loader.setController(this);
                 DialogPane dialogPane = loader.load();
 
-                // Cài đặt dialog
                 Dialog<ButtonType> dialog = new Dialog<>();
                 dialog.setDialogPane(dialogPane);
                 dialog.setTitle("Tạo kiểm kê");
 
-                // Cài đặt bảng
                 productNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
                 systemQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("systemQuantity"));
                 actualQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("actualQuantity"));
@@ -290,24 +303,4 @@ public class InventoryCheckController implements Initializable {
 
         new Thread(task).start();
     }
-    public void handleGoToProductManagerController(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/GUI/SanPhamGUI.fxml"));
-            Parent root = loader.load();
-
-            ProductManagerController controller = loader.getController();
-
-            controller.initData(currentUser, inventoryService, productService);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Quản lý sản phẩm");
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }

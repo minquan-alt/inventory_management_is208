@@ -11,21 +11,17 @@ import com.puzzle.service.InventoryService;
 import com.puzzle.service.ProductService;
 import com.puzzle.service.UserService;
 import com.puzzle.utils.AlertUtil;
+import com.puzzle.utils.SceneManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import jakarta.servlet.http.HttpSession;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 
 @Controller // Đánh dấu là Spring Bean
@@ -59,59 +55,75 @@ public class LoginController {
         String username = usernameField.getText();
         String password = passwordField.getText();
         HttpSession session = FXSessionManager.getSession();
+
+        try {
+        User user = authService.authenticate(username, password, session);
+        UserResponse userResponse = userService.mapUserResponse(user);
+        System.out.print(userResponse);
+        
+        String fxmlPath;
+        Object[] initArgs;
+        switch (user.getRole()) {
+            case ROLE_PRODUCT_MANAGEMENT:
+                fxmlPath = "/views/GUI/DashBoardQLKGUI.fxml";
+                initArgs = new Object[]{userResponse}; // CHỈ truyền data
+                break;
+            case ROLE_HUMAN_MANAGEMENT:
+                fxmlPath = "/views/GUI/NhanVienGUI.fxml";
+                initArgs = new Object[]{userResponse}; // CHỈ truyền data
+                break;
+            case ROLE_RECEIPT:
+                fxmlPath = "/views/GUI/DashBoardNVNKGUI.fxml";
+                initArgs = new Object[]{userResponse}; // CHỈ truyền data
+                break;
+            case ROLE_ISSUE:
+                fxmlPath = "/views/GUI/DashBoardNVXKGUI.fxml";
+                initArgs = new Object[]{userResponse}; // CHỈ truyền data
+                break;
+            default:
+                throw new IllegalStateException("Unexpected role: " + user.getRole());
+        }
+        
+        // Dùng SceneManager để đảm bảo Spring inject dependencies
+        SceneManager.switchScene(fxmlPath, loginButton, initArgs);
+        
+    } catch (AppException | IOException e) {
+        AlertUtil.showError(e.getMessage());
+    }
+        
+        // try {
+        //     User user = authService.authenticate(username, password, session);
+        //     UserResponse userResponse = userService.mapUserResponse(user);
             
-            try {
-                // Gọi thẳng service
-                User user = authService.authenticate(username, password, session);
-                UserResponse userResponse = userService.mapUserResponse(user);
-                
-                Platform.runLater(() -> {
-                    try {
-                        FXMLLoader loader;
-                        Parent root;
-                        Stage stage = (Stage) loginButton.getScene().getWindow();
-                        switch (user.getRole()) {
-                            case ROLE_PRODUCT_MANAGEMENT:
-                                loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardQLKGUI.fxml"));
-                                root = loader.load();
-                                DashBoardProductManagerController managerController = loader.getController();
-                                managerController.initData(userResponse, inventoryService, productService);
-                                // productController.initData(userResponse);
-                                break;
-
-                            case ROLE_HUMAN_MANAGEMENT:
-                                loader = new FXMLLoader(getClass().getResource("/views/GUI/NhanVienGUI.fxml"));
-                                root = loader.load();
-                                HumanManagerController humanController = loader.getController();
-                                humanController.initData(userService, userResponse);
-                                break;
-
-                            case ROLE_RECEIPT:
-                                loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardNVNKGUI.fxml"));
-                                root = loader.load();
-                                DashBoardReceiptController receiptController = loader.getController();
-                                receiptController.initData(userResponse, inventoryService);
-                                break;
-
-                            case ROLE_ISSUE:
-                                loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardNVXKGUI.fxml"));
-                                root = loader.load();
-                                DashBoardIssueController issueController = loader.getController();
-                                issueController.initData(userResponse, inventoryService);
-                                break;
-
-                            default:
-                                throw new IllegalStateException("Unexpected value: " + user.getRole());
-                        }
-                        stage.setScene(new Scene(root));
-                        stage.show();
-                    } catch (IOException e) {
-                        System.out.print(e);
-                    }
-                });
-            } catch (AppException e) {
-                AlertUtil.showError(e.getMessage());
-            }
+        //     String fxmlPath;
+        //     Object[] initArgs;
+        //     switch (user.getRole()) {
+        //         case ROLE_PRODUCT_MANAGEMENT:
+        //             fxmlPath = "/views/GUI/DashBoardQLKGUI.fxml";
+        //             initArgs = new Object[]{userResponse, inventoryService, productService};
+        //             break;
+        //         case ROLE_HUMAN_MANAGEMENT:
+        //             fxmlPath = "/views/GUI/NhanVienGUI.fxml";
+        //             initArgs = new Object[]{userService, userResponse};
+        //             break;
+        //         case ROLE_RECEIPT:
+        //             fxmlPath = "/views/GUI/DashBoardNVNKGUI.fxml";
+        //             initArgs = new Object[]{userResponse, inventoryService};
+        //             break;
+        //         case ROLE_ISSUE:
+        //             fxmlPath = "/views/GUI/DashBoardNVXKGUI.fxml";
+        //             initArgs = new Object[]{userResponse, inventoryService};
+        //             break;
+        //         default:
+        //             throw new IllegalStateException("Unexpected role: " + user.getRole());
+        //     }
+            
+        //     // Sử dụng SceneManager để chuyển cảnh (dùng loginButton làm sourceNode)
+        //     SceneManager.switchScene(fxmlPath, loginButton, initArgs);
+            
+        // } catch (AppException | IOException e) {
+        //     AlertUtil.showError(e.getMessage());
+        // }
     }
 
     @FXML

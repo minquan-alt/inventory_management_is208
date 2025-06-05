@@ -10,7 +10,9 @@ import com.puzzle.dto.response.UserResponse;
 import com.puzzle.exception.AppException;
 import com.puzzle.service.UserService;
 import com.puzzle.utils.AlertUtil;
+import com.puzzle.utils.SceneManager;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 
@@ -51,6 +53,7 @@ public class HumanManagerController {
     @FXML private TableColumn<UserResponse, Void> colDelete;
 
 
+    @Autowired
     private UserService userService;
     private UserResponse user;
 
@@ -64,9 +67,34 @@ public class HumanManagerController {
         setupTableColumns();
     }
 
+
+
+    private static final String LOGIN_FXML = "/views/GUI/LoginGUI.fxml";
+    @FXML private Button logoutButton;
+
     private void setupEventHandlers() {
+        logoutButton.setOnAction(event -> handleLogout());
         addUser.setOnAction(event -> addUser());
         searchIcon.setOnMouseClicked(event -> handleSearch());
+    }
+
+    private void handleLogout() {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Xác nhận đăng xuất");
+        confirmAlert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
+        
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            handleViewSwitch(LOGIN_FXML, "Đăng nhập");
+        }
+    }
+
+    public void handleViewSwitch(String fxmlPath, String viewName) {
+        try {
+            SceneManager.switchScene(fxmlPath, logoutButton, user);
+        } catch (IOException e) {
+            AlertUtil.showError("Lỗi khi chuyển đến trang " + viewName + ": " + e.getMessage());
+        }
     }
 
     private void handleSearch() {
@@ -232,9 +260,8 @@ public class HumanManagerController {
         }
     }
 
-    public void initData(UserService userService, UserResponse userResponse) {
+    public void initData(UserResponse userResponse) {
         this.user = userResponse;
-        this.userService = userService;
 
         if (Platform.isFxApplicationThread()) {
             updateUI();

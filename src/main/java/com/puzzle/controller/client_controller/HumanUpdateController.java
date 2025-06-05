@@ -23,7 +23,7 @@ public class HumanUpdateController {
 
     @FXML
     public void initialize() {
-        List<String> statuses = Arrays.asList("Đang hoạt động", "Tạm khóa", "Đã xóa");
+        List<String> statuses = Arrays.asList("Đang hoạt động", "Ngưng hoạt động");
 
         cmbStatus.getItems().addAll(statuses);
         cmbRole.getItems().addAll(Role.values());

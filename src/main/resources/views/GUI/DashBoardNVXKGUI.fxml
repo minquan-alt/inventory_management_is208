@@ -25,6 +25,11 @@
             </cursor>
         </Label>
         <Circle fill="DODGERBLUE" layoutX="35.0" layoutY="363.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
+        <Button fx:id="logoutButton" layoutX="13.0" layoutY="320.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #dc3545; -fx-background-radius: 5;" text="ĐĂNG XUẤT" textFill="WHITE">
+            <font>
+                <Font name="Arial Bold" size="10.0" />
+            </font>
+        </Button>
         <Label fx:id="username" layoutX="57.0" layoutY="354.0" text="UserName" />
         <Label layoutX="140.0" layoutY="13.0" prefHeight="122.0" prefWidth="444.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 20;" />
         <Label fx:id="helloUser" layoutX="163.0" layoutY="24.0" style="-fx-background-color: #FFFFFF;" text="Hello UserName, wellcome back!">

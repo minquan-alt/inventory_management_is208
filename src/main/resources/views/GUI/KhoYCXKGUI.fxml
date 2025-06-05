@@ -31,6 +31,11 @@
                 <Font name="Arial Bold" size="12.0" />
             </font>
         </Button>
+        <Button fx:id="logoutButton" layoutX="13.0" layoutY="320.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #dc3545; -fx-background-radius: 5;" text="ĐĂNG XUẤT" textFill="WHITE">
+            <font>
+                <Font name="Arial Bold" size="10.0" />
+            </font>
+        </Button>
         <Label fx:id="userNameLabel" layoutX="57.0" layoutY="354.0" text="UserName" />
         <Label layoutX="146.0" layoutY="85.0" prefHeight="304.0" prefWidth="438.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
         <Button layoutX="13.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #0924bc;" text="KHO" textFill="WHITE">

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.puzzle.dto.response.InventoryResponse;
@@ -12,6 +13,7 @@ import com.puzzle.service.InventoryService;
 import com.puzzle.utils.AlertUtil;
 import com.puzzle.utils.SceneManager;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javafx.application.Platform;
@@ -21,7 +23,9 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 
 @Controller
@@ -42,6 +46,7 @@ public class DashBoardReceiptController {
     @FXML private BarChart<String, Number> barChart;
 
     private UserResponse user;
+    @Autowired
     private InventoryService inventoryService;
 
     @FXML
@@ -50,22 +55,37 @@ public class DashBoardReceiptController {
         setupChart();
     }
 
+    private static final String LOGIN_FXML = "/views/GUI/LoginGUI.fxml";
+    @FXML private Button logoutButton;
+
+
+    private void handleLogout() {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Xác nhận đăng xuất");
+        confirmAlert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
+        
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            handleViewSwitch(LOGIN_FXML, "Đăng nhập");
+        }
+    }
+
     private void setupEventHandlers() {
+        logoutButton.setOnAction(event -> handleLogout());
         getDashboardView.setOnAction(event -> handleViewSwitch(DASHBOARD_FXML, "Dashboard"));
         getReceiptView.setOnAction(event -> handleViewSwitch(ISSUE_FXML, "Nhập kho"));
     }
 
     public void handleViewSwitch(String fxmlPath, String viewName) {
         try {
-            SceneManager.switchScene(fxmlPath, getDashboardView, user, inventoryService);
+            SceneManager.switchScene(fxmlPath, logoutButton, user);
         } catch (IOException e) {
             AlertUtil.showError("Lỗi khi chuyển đến trang " + viewName + ": " + e.getMessage());
         }
     }
 
-    public void initData(UserResponse user, InventoryService inventoryService) {
+    public void initData(UserResponse user) {
         this.user = user;
-        this.inventoryService = inventoryService;
 
         if (Platform.isFxApplicationThread()) {
             updateUI();

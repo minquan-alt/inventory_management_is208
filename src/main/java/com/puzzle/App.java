@@ -2,6 +2,8 @@ package com.puzzle;
 
 import java.io.IOException;
 
+import com.puzzle.utils.SceneManager;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -20,6 +22,7 @@ public class App extends Application {
     public void init() {
         // Khởi động Spring Boot trong background
         springContext = SpringApplication.run(App.class);
+        SceneManager.setSpringContext(springContext);
     }
     
     private Stage primaryStage;

@@ -72,9 +72,8 @@ public class IssueFormController {
     }
 
 
-    public void initData(UserResponse user, InventoryService inventoryService) {
+    public void initData(UserResponse user) {
         this.user = user;
-        this.inventoryService = inventoryService;
         initializeForm();
     }
 

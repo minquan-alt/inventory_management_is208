@@ -4,15 +4,28 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import org.springframework.context.ConfigurableApplicationContext;
+
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public class SceneManager {
-    public static void switchScene(String fxmlPath, Button sourceButton, Object... args) throws IOException {
+    private static ConfigurableApplicationContext springContext;
+
+    public static void setSpringContext(ConfigurableApplicationContext context) {
+        springContext = context;
+    }
+
+    public static void switchScene(String fxmlPath, Node sourceButton, Object... args) throws IOException {
         FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
+
+        if (springContext != null) {
+            loader.setControllerFactory(springContext::getBean);
+        }
+
         Parent root = loader.load();
         
         Object controller = loader.getController();
@@ -23,7 +36,7 @@ public class SceneManager {
         switchScene(root, sourceButton);
     }
 
-    private static void switchScene(Parent root, Button sourceButton) {
+    private static void switchScene(Parent root, Node sourceButton) {
         Stage stage = (Stage) sourceButton.getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);

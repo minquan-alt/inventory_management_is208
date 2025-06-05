@@ -1,12 +1,21 @@
 package com.puzzle.controller.client_controller;
 
-import com.puzzle.dto.response.ProductResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.puzzle.dto.request.CreateProductRequest;
+import com.puzzle.dto.response.ProductResponse;
 import com.puzzle.dto.response.UserResponse;
 import com.puzzle.service.InventoryService;
 import com.puzzle.service.ProductService;
-import com.puzzle.service.UserService;
 import com.puzzle.utils.AlertUtil;
+import com.puzzle.utils.SceneManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Controller;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -15,24 +24,33 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 import javafx.util.Callback;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Controller;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class ProductManagerController {
+
+    // Constants for FXML paths
+    private static final String LOGIN_FXML = "/views/GUI/LoginGUI.fxml";
+    private static final String KIEM_KE_FXML = "/views/GUI/KiemKeGUI.fxml";
+    private static final String DASHBOARD_FXML = "/views/GUI/DashBoardQLKGUI.fxml";
+    private static final String YEU_CAU_XUAT_KHO_FXML = "/views/GUI/KhoYCXKGUI.fxml";
+    private static final String YEU_CAU_NHAP_KHO_FXML = "/views/GUI/KhoYCNKGUI.fxml";
+    private static final String PRODUCT_MANAGER_FXML = "/views/GUI/SanPhamGUI.fxml";
+
+    @FXML private Button logoutButton;
     @FXML private ImageView searchIcon;
     @FXML private Button addProduct;
     @FXML private Label menu_username;
@@ -47,17 +65,42 @@ public class ProductManagerController {
     @FXML private TableColumn<ProductResponse, Void> colUpdate;
     @FXML private TableColumn<ProductResponse, Void> colDelete;
 
+    @Autowired
     private ProductService productService;
+    @Autowired
     private InventoryService inventoryService;
     private UserResponse currentUser;
 
     @FXML
     public void initialize() {
+        logoutButton.setOnAction(event -> handleLogout());
+        
         if (searchIcon != null) {
             searchIcon.setCursor(Cursor.HAND);
         }
         setupEventHandlers();
         setupTableColumns();
+    }
+
+    private void handleLogout() {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Xác nhận đăng xuất");
+        confirmAlert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
+        
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            handleViewSwitch(LOGIN_FXML, "Đăng nhập");
+        }
+    }
+
+    private void handleViewSwitch(String fxmlPath, String viewName) {
+        try {
+            SceneManager.switchScene(fxmlPath, logoutButton, currentUser);
+        } catch (IOException e) {
+            AlertUtil.showError("Lỗi khi chuyển đến trang " + viewName + ": " + e.getMessage());
+        } catch (Exception e) {
+            AlertUtil.showError("Lỗi không xác định khi chuyển trang: " + e.getMessage());
+        }
     }
 
     private void setupEventHandlers() {
@@ -190,13 +233,9 @@ public class ProductManagerController {
         tableView.refresh();
     }
 
-    public void initData(UserResponse user, InventoryService inventoryService, ProductService productService) {
+    public void initData(UserResponse user) {
         this.currentUser = user;
-        this.inventoryService = inventoryService;
-        this.productService = productService;
-
         menu_username.setText(user.getName());
-
         updateUI();
     }
 
@@ -217,40 +256,30 @@ public class ProductManagerController {
             });
         }
     }
+
+    // Navigation methods using handleViewSwitch
+    @FXML
     public void handleGoToDashBoardProductManager(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/GUI/DashBoardQLKGUI.fxml"));
-            Parent root = loader.load();
-
-            DashBoardProductManagerController controller = loader.getController();
-
-            controller.initData(currentUser, inventoryService, productService);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Dash Board Product Manager");
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        handleViewSwitch(DASHBOARD_FXML, "Dashboard");
     }
+
+    @FXML
     public void handleGoToInventory(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/GUI/KhoYCNKGUI.fxml"));
-            Parent root = loader.load();
+        handleViewSwitch(YEU_CAU_NHAP_KHO_FXML, "Kho YCNK Check");
+    }
 
-            KhoYCNKController controller = loader.getController();
+    @FXML
+    private void handleGoToKiemKe(ActionEvent event) {
+        handleViewSwitch(KIEM_KE_FXML, "Kiểm kê");
+    }
 
-            controller.initData(currentUser, inventoryService, productService);
+    @FXML
+    private void handleGoToYeuCauXuatKho(ActionEvent event) {
+        handleViewSwitch(YEU_CAU_XUAT_KHO_FXML, "Yêu cầu xuất kho");
+    }
 
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Kho YCNK Check");
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @FXML
+    private void handleYeuCauNhapKho(ActionEvent event) {
+        handleViewSwitch(YEU_CAU_NHAP_KHO_FXML, "Yêu cầu nhập kho");
     }
 }

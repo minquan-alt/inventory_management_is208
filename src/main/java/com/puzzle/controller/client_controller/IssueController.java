@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.puzzle.dto.response.StockOutResponse;
 import com.puzzle.dto.response.UserResponse;
@@ -12,6 +13,7 @@ import com.puzzle.service.InventoryService;
 import com.puzzle.utils.AlertUtil;
 import com.puzzle.utils.SceneManager;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javafx.application.Platform;
@@ -20,6 +22,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -57,10 +60,26 @@ public class IssueController {
     @FXML private TableColumn<StockOutResponse, String> colTrangThai;
     @FXML private TableColumn<StockOutResponse, Void> colChiTiet;
 
+    @Autowired
     private InventoryService inventoryService;
     private UserResponse user;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     private boolean isSearched = false;
+
+    private static final String LOGIN_FXML = "/views/GUI/LoginGUI.fxml";
+    @FXML private Button logoutButton;
+
+
+    private void handleLogout() {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Xác nhận đăng xuất");
+        confirmAlert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
+        
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            handleViewSwitch(LOGIN_FXML, "Đăng nhập");
+        }
+    }
 
     @FXML
     public void initialize() {
@@ -73,6 +92,8 @@ public class IssueController {
     }
 
     private void setupEventHandlers() {
+        logoutButton.setOnAction(event -> handleLogout());
+
         if (getDashboardView != null) {
             getDashboardView.setOnAction(event -> handleViewSwitch(DASHBOARD_FXML, "Dashboard"));
         }
@@ -162,7 +183,7 @@ public class IssueController {
             IssueFormController issueFormController = loader.getController();
             
             if (issueFormController != null) {
-                issueFormController.initData(user, inventoryService);
+                issueFormController.initData(user);
             }
 
             Dialog<ButtonType> dialog = new Dialog<>();
@@ -220,7 +241,7 @@ public class IssueController {
 
     private void handleViewSwitch(String fxmlPath, String viewName) {
         try {
-            SceneManager.switchScene(fxmlPath, getDashboardView, user, inventoryService);
+            SceneManager.switchScene(fxmlPath, logoutButton, user);
         } catch (IOException e) {
             AlertUtil.showError("Lỗi khi chuyển đến trang " + viewName + ": " + e.getMessage());
         } catch (Exception e) {
@@ -228,9 +249,8 @@ public class IssueController {
         }
     }
 
-    public void initData(UserResponse user, InventoryService inventoryService) {
+    public void initData(UserResponse user) {
         this.user = user;
-        this.inventoryService = inventoryService;
         
         if (Platform.isFxApplicationThread()) {
             updateUI();

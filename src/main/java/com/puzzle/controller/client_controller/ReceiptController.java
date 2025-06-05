@@ -3,6 +3,7 @@ package com.puzzle.controller.client_controller;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import com.puzzle.dto.response.StockInResponse;
 import com.puzzle.dto.response.UserResponse;
@@ -11,6 +12,7 @@ import com.puzzle.service.InventoryService;
 import com.puzzle.utils.AlertUtil;
 import com.puzzle.utils.SceneManager;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javafx.application.Platform;
@@ -19,6 +21,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -62,6 +65,9 @@ public class ReceiptController {
     @FXML
     private Button createStockIn;
 
+    private static final String LOGIN_FXML = "/views/GUI/LoginGUI.fxml";
+    @FXML private Button logoutButton;
+
     @FXML private TableColumn<StockInResponse, String> colMaNK;
     @FXML private TableColumn<StockInResponse, String> colMaNV;
     @FXML private TableColumn<StockInResponse, String> colNgayTao;
@@ -70,6 +76,7 @@ public class ReceiptController {
     @FXML private TableColumn<StockInResponse, String> colTrangThai;
     @FXML private TableColumn<StockInResponse, Void> colChiTiet;
 
+    @Autowired
     private InventoryService inventoryService;
     private UserResponse user;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -84,12 +91,25 @@ public class ReceiptController {
     }
 
     private void setupEventHandlers() {
+        logoutButton.setOnAction(event -> handleLogout());
         getDashboardView.setOnAction(event -> handleViewSwitch(DASHBOARD_FXML, "Dashboard"));
         getReceiptView.setOnAction(event -> handleViewSwitch(RECEIPT_FXML, "Nhập kho"));
 
         createStockIn.setOnAction(event -> handleCreateStockIn());
         searchIcon.setOnMouseClicked(event -> handleSearch());
     }
+
+    private void handleLogout() {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Xác nhận đăng xuất");
+        confirmAlert.setHeaderText("Bạn có chắc chắn muốn đăng xuất?");
+        
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            handleViewSwitch(LOGIN_FXML, "Đăng nhập");
+        }
+    }
+
 
     private void setupDetailColumn() {
         colChiTiet.setCellFactory(new Callback<TableColumn<StockInResponse, Void>, TableCell<StockInResponse, Void>>() {
@@ -173,15 +193,14 @@ public class ReceiptController {
 
     private void handleViewSwitch(String fxmlPath, String viewName) {
         try {
-            SceneManager.switchScene(fxmlPath, getDashboardView, user, inventoryService);
+            SceneManager.switchScene(fxmlPath, getDashboardView, user);
         } catch (IOException e) {
             AlertUtil.showError("Lỗi khi chuyển đến trang " + viewName + ": " + e.getMessage());
         }
     }
 
-    public void initData(UserResponse user, InventoryService inventoryService) {
+    public void initData(UserResponse user) {
         this.user = user;
-        this.inventoryService = inventoryService;
 
         if (Platform.isFxApplicationThread()) {
             updateUI();
