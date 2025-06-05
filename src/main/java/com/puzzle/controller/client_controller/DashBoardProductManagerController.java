@@ -135,5 +135,24 @@ public class DashBoardProductManagerController {
             e.printStackTrace();
         }
     }
+    public void handleGoToProductManagerController(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/GUI/SanPhamGUI.fxml"));
+            Parent root = loader.load();
+
+            ProductManagerController controller = loader.getController();
+
+            controller.initData(currentUser, inventoryService, productService);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Quản lý sản phẩm");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

@@ -84,7 +84,7 @@ public class InventoryController {
     @GetMapping("/stock-in")
     public ApiResponse<List<StockInResponse>> getStockInRequests(HttpSession session) {
         ApiResponse<List<StockInResponse>> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(inventoryService.getStockInRequests(session));
+        apiResponse.setResult(inventoryService.getStockInRequests());
         return apiResponse;
     }
 

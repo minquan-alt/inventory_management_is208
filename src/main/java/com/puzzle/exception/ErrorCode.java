@@ -21,9 +21,9 @@ public enum ErrorCode {
     ERROR_IN_CREATE_STOCK_IN_REQUEST_PROCESS(2005, "Stock in request process met error"),
 
     HAVE_NON_EXIST_PRODUCT_ID(3001, "There is at least 1 id not existed"),
-
-    PRODUCT_NOT_FOUND(1009, "Product not existed"),
-
+    PRODUCT_NOT_FOUND(1009, "Product not found"),
+    PRODUCT_NOT_EXISTED(1010, "Product not existed"),
+    PRODUCT_NAME_EXISTED(1011, "Product name not existed"),
     INVENTORY_NOT_FOUND(1010, "Inventory check not existed"),
     ;
     ErrorCode(int code, String message){

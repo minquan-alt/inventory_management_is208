@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 
 <DialogPane xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.puzzle.controller.client_controller.HumanDialogController">
+            fx:controller="com.puzzle.controller.client_controller.HumanUpdateController">
    <content>
       <VBox prefHeight="300.0" prefWidth="450.0" spacing="10.0">
          <padding>

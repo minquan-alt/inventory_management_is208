@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpSession;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -126,34 +125,25 @@ public class KhoYCNKController implements Initializable {
 
 
     private void loadData() {
-        Task<List<StockInDisplayRow>> task = new Task<>() {
-            @Override
-            protected List<StockInDisplayRow> call() {
-                List<StockInDisplayRow> rows = new ArrayList<>();
-                List<StockInResponse> requests = inventoryService.getStockInRequests(null);
-                for (StockInResponse req : requests) {
-                    List<StockInDetailsResponse> details = inventoryService.getStockInDetailsResponses(req.getRequest_id());
-                    for (StockInDetailsResponse detail : details) {
-                        String productName = productService.getProductNameById(detail.getProduct_id());
-                        rows.add(StockInDisplayRow.builder()
-                                .requestId(req.getRequest_id())
-                                .productName(productName)
-                                .quantity(detail.getQuantity())
-                                .status(req.getStatus())
-                                .build());
-                    }
-                }
-                return rows;
+        List<StockInResponse> requests = inventoryService.getStockInRequests();
+        List<StockInDisplayRow> rows = new ArrayList<>();
+
+        for (StockInResponse req : requests) {
+            List<StockInDetailsResponse> details = inventoryService.getStockInDetailsResponses(req.getRequest_id());
+
+            for (StockInDetailsResponse detail : details) {
+                String productName = productService.getProductNameById(detail.getProduct_id());
+                rows.add(StockInDisplayRow.builder()
+                        .requestId(req.getRequest_id())
+                        .productName(productName)
+                        .quantity(detail.getQuantity())
+                        .status(req.getStatus())
+                        .build());
             }
-        };
+        }
 
-        task.setOnSucceeded(e -> stockInTable.getItems().setAll(task.getValue()));
-
-        task.setOnFailed(e -> task.getException().printStackTrace());
-
-        new Thread(task).start();
+        stockInTable.getItems().setAll(rows);
     }
-
 
     @FXML
     private void handleGoToKiemKe(ActionEvent event) {
@@ -205,6 +195,25 @@ public class KhoYCNKController implements Initializable {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void handleGoToProductManagerController(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/GUI/SanPhamGUI.fxml"));
+            Parent root = loader.load();
+
+            ProductManagerController controller = loader.getController();
+
+            controller.initData(currentUser, inventoryService, productService);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Quản lý sản phẩm");
+            stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

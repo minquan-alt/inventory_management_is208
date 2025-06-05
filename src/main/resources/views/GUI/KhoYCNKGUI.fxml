@@ -41,7 +41,7 @@
             <Insets />
          </opaqueInsets>
         </Button>
-        <Button fx:id="btnSanPham"  layoutX="13.0" layoutY="237.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF;" text="SẢN PHẨM" textFill="#080808">
+        <Button fx:id="btnSanPham"  layoutX="13.0" layoutY="237.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" onAction="#handleGoToProductManagerController" style="-fx-background-color: #FFFFFF;" text="SẢN PHẨM" textFill="#080808">
             <font>
                 <Font name="Arial Bold" size="12.0" />
             </font>

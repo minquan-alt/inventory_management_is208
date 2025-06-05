@@ -204,23 +204,17 @@ public class IssueController {
             loadIssueData(issueLists);
             isSearched = true;
         } catch (NumberFormatException e) {
-            Platform.runLater(() -> {
                 loadIssueData(new ArrayList<>());
                 isSearched = true;
                 AlertUtil.showError("Vui lòng nhập một số hợp lệ để tìm kiếm.");
-            });
         } catch (AppException e) {
-            Platform.runLater(() -> {
                 AlertUtil.showError(e.getMessage());
                 isSearched = true;
                 loadIssueData(new ArrayList<>()); // Truyền empty list thay vì null
-            });
         } catch (Exception e) {
-            Platform.runLater(() -> {
                 AlertUtil.showError("Lỗi khi tìm kiếm: " + e.getMessage());
                 isSearched = true;
                 loadIssueData(new ArrayList<>()); // Truyền empty list thay vì null
-            });
         }
     }
 
@@ -266,15 +260,17 @@ public class IssueController {
             } else {
                 Platform.runLater(() -> issueTable.setItems(data));
             }
+
+            issueTable.refresh();
             
         } catch (Exception e) {
             e.printStackTrace();
             AlertUtil.showError("Lỗi khi tải dữ liệu xuất kho: " + e.getMessage());
-            Platform.runLater(() -> {
                 if (issueTable != null) {
                     issueTable.setItems(FXCollections.observableArrayList());
+                    issueTable.refresh();
+
                 }
-            });
         }
     }
 
