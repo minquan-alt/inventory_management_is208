@@ -398,18 +398,19 @@ public class InventoryService {
                     .product(product)
                     .actualQuantity(rq.getActualQuantity())
                     .systemQuantity(systemQuantity)
+//                    .adjustment(rq.getActualQuantity() - systemQuantity)
                     .note(rq.getNote() != null ? rq.getNote() : "No Note")
                     .build();
 //            inventoryCheckDetailRepository.save(detail);
 
             detailInventoryCheckDetails.add(detail);
 
-//            Optional<Inventory> inventory = inventoryRepository.findByProductId(productId);
-//            if (inventory.isPresent()) {
-//                Inventory inv = inventory.get();
-//                inv.setQuantity(rq.getActualQuantity());
-//                inventoryRepository.save(inv); // Lưu lại nếu cần
-//            }
+            Optional<Inventory> inventory = inventoryRepository.findByProductId(productId);
+            if (inventory.isPresent()) {
+                Inventory inv = inventory.get();
+                inv.setQuantity(rq.getActualQuantity());
+                inventoryRepository.save(inv);
+            }
 
             int adjustment = rq.getActualQuantity() - systemQuantity;
             if (adjustment != 0) {

@@ -16,6 +16,7 @@ import com.puzzle.service.ProductService;
 import com.puzzle.utils.AlertUtil;
 import com.puzzle.utils.SceneManager;
 
+import javafx.concurrent.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -52,10 +53,13 @@ public class KhoYCNKController implements Initializable {
 
     @FXML private Button logoutButton;
     @FXML private TableView<StockInDisplayRow> stockInTable;
-    @FXML private TableColumn<StockInDisplayRow, Long> requestIdColumn;
-    @FXML private TableColumn<StockInDisplayRow, String> productNameColumn;
-    @FXML private TableColumn<StockInDisplayRow, Integer> quantityColumn;
+    @FXML private TableColumn<StockInDisplayRow, Long> MaNKColumn;
+    @FXML private TableColumn<StockInDisplayRow, Long> MaNVColumn;
+    @FXML private TableColumn<StockInDisplayRow, String> NgayTaoColumn;
+    @FXML private TableColumn<StockInDisplayRow, String> NguoiDuyetColumn;
+    @FXML private TableColumn<StockInDisplayRow, String> NgayDuyetColumn;
     @FXML private TableColumn<StockInDisplayRow, String> statusColumn;
+    @FXML private TableColumn<StockInDisplayRow, Void> actionColumn;
     @FXML private Label userNameLabel;
 
     @Autowired
@@ -74,38 +78,62 @@ public class KhoYCNKController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         logoutButton.setOnAction(event -> handleLogout());
-        
-        requestIdColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getRequestId()));
-        productNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getProductName()));
-        quantityColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getQuantity()));
 
+        MaNKColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getRequestId()));
+        MaNVColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEmployeeId()));
+        NgayTaoColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getCreatedAt()));
+        NguoiDuyetColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getApprovedBy()));
+        NgayDuyetColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getApprovedAt()));
         statusColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getStatus()));
-        statusColumn.setCellFactory(col -> {
-            ComboBox<String> comboBox = new ComboBox<>();
-            return new TableCell<>() {
-                {
-                    comboBox.getItems().addAll("PENDING", "APPROVED", "DECLINED");
-                    comboBox.setOnAction(e -> {
-                        StockInDisplayRow row = getTableView().getItems().get(getIndex());
-                        String selected = comboBox.getValue();
-                        if (!row.getStatus().equals(selected)) {
-                            row.setStatus(selected);
-                            updateStatus(row.getRequestId(), selected);
-                        }
-                    });
-                }
 
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setGraphic(null);
-                    } else {
-                        comboBox.setValue(item);
-                        setGraphic(comboBox);
+        statusColumn.setCellFactory(col -> new TableCell<>() {
+            private final ComboBox<String> comboBox = new ComboBox<>();
+
+            {
+                comboBox.getItems().addAll("PENDING", "APPROVED", "DECLINED");
+                comboBox.setOnAction(e -> {
+                    StockInDisplayRow row = getTableView().getItems().get(getIndex());
+                    String selected = comboBox.getValue();
+                    if (!row.getStatus().equals(selected)) {
+                        updateStatus(row.getRequestId(), selected);
                     }
+                });
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    comboBox.setValue(item);
+                    setGraphic(comboBox);
                 }
-            };
+            }
+        });
+
+        actionColumn.setCellFactory(col -> new TableCell<>() {
+            private final Button btn = new Button("Chi tiết");
+
+            {
+                btn.setOnAction(event -> {
+                    StockInDisplayRow row = getTableView().getItems().get(getIndex());
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Chi tiết phiếu nhập");
+                    alert.setContentText("ID: " + row.getRequestId() + "\nTrạng thái: " + row.getStatus());
+                    alert.showAndWait();
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btn);
+                }
+            }
         });
     }
 
@@ -132,7 +160,7 @@ public class KhoYCNKController implements Initializable {
 
     private void updateStatus(Long requestId, String newStatus) {
         try {
-            HttpSession session = FXSessionManager.getSession(); // Lấy session thật
+            HttpSession session = FXSessionManager.getSession();
 
             switch (newStatus) {
                 case "APPROVED" -> inventoryService.approveStockInRequest(requestId, session);
@@ -159,25 +187,32 @@ public class KhoYCNKController implements Initializable {
     }
 
     private void loadData() {
-        List<StockInResponse> requests = inventoryService.getStockInRequests();
-        List<StockInDisplayRow> rows = new ArrayList<>();
-
-        for (StockInResponse req : requests) {
-            List<StockInDetailsResponse> details = inventoryService.getStockInDetailsResponses(req.getRequest_id());
-
-            for (StockInDetailsResponse detail : details) {
-                String productName = productService.getProductNameById(detail.getProduct_id());
-                rows.add(StockInDisplayRow.builder()
-                        .requestId(req.getRequest_id())
-                        .productName(productName)
-                        .quantity(detail.getQuantity())
-                        .status(req.getStatus())
-                        .build());
+        Task<List<StockInResponse>> task = new Task<>() {
+            @Override
+            protected List<StockInResponse> call() {
+                return inventoryService.getStockInRequests();
             }
-        }
+        };
 
-        stockInTable.getItems().setAll(rows);
+        task.setOnSucceeded(e -> {
+            List<StockInDisplayRow> rows = task.getValue().stream().map(req -> StockInDisplayRow.builder()
+                    .requestId(req.getRequest_id())
+                    .employeeId(req.getEmployee_id())
+                    .createdAt(req.getCreated_at() != null ? req.getCreated_at().toString() : "")
+                    .approvedBy(req.getApproved_by() != null ? req.getApproved_by().toString() : "Chưa duyệt")
+                    .approvedAt(req.getApproved_at() != null ? req.getApproved_at().toString() : "")
+                    .status(req.getStatus())
+                    .build()
+            ).toList();
+
+            stockInTable.getItems().setAll(rows);
+        });
+
+        task.setOnFailed(e -> task.getException().printStackTrace());
+
+        new Thread(task).start();
     }
+
 
     // Navigation methods using handleViewSwitch
     @FXML
@@ -211,8 +246,10 @@ public class KhoYCNKController implements Initializable {
     @AllArgsConstructor
     public static class StockInDisplayRow {
         Long requestId;
-        String productName;
-        Integer quantity;
+        Long employeeId;
+        String createdAt;
+        String approvedBy;
+        String approvedAt;
         String status;
     }
 }

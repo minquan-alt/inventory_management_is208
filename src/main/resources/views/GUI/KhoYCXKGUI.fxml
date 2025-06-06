@@ -68,11 +68,13 @@
         <TextField layoutX="227.0" layoutY="159.0" prefHeight="26.0" prefWidth="665.0" promptText="Search" />
         <TableView fx:id="stockOutTable" layoutX="200.0" layoutY="195.0" prefHeight="383.0" prefWidth="695.0">
             <columns>
-                <TableColumn fx:id="requestIdColumn" prefWidth="99.19998168945312" text="MaYCXK" />
-                <TableColumn fx:id="productNameColumn" prefWidth="231.20004272460938" text="Tên sản phẩm" />
-                <TableColumn fx:id="quantityColumn" prefWidth="108.800048828125" text="Số lượng" />
-                <TableColumn fx:id="statusColumn" prefWidth="147.2000732421875" text="Trạng thái" />
-                <TableColumn fx:id="actionColumn" prefWidth="111.199951171875" text="Chi tiết" />
+                <TableColumn fx:id="MaXKColumn" text="Mã XK" prefWidth=100.0" />
+                <TableColumn fx:id="MaNVColumn" text="Mã NV" prefWidth="100.0" />
+                <TableColumn fx:id="NgayTaoColumn" text="Ngày tạo" prefWidth="100.0" />
+                <TableColumn fx:id="NguoiDuyetColumn" text="Người duyệt" prefWidth="100.0" />
+                <TableColumn fx:id="NgayDuyetColumn" text="Ngày duyệt" prefWidth="100.0" />
+                <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="150.0" />
+                <TableColumn fx:id="actionColumn" prefWidth="100.0" text="Chi tiết" />
             </columns>
         </TableView>
       <Button layoutX="705.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleKiemKe" prefHeight="60.0" prefWidth="150.0" styleClass="ThirdButton" text="KIỂM KÊ" textFill="#3d55cf">

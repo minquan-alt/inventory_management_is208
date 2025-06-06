@@ -51,15 +51,18 @@
                 <Font name="System Bold" size="16.0" />
             </font>
         </Button>
-      <Label layoutX="186.0" layoutY="13.0" prefHeight="110.0" prefWidth="725.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
-      <TextField layoutX="227.0" layoutY="159.0" prefHeight="26.0" prefWidth="665.0" promptText="Search" />
-      <TableView fx:id="stockInTable" layoutX="200.0" layoutY="195.0" prefHeight="383.0" prefWidth="695.0">
-        <columns>
-          <TableColumn fx:id="requestIdColumn" prefWidth="118.40000915527344" text="MaYCNK" />
-          <TableColumn fx:id="productNameColumn" prefWidth="268.8000793457031" text="Tên sản phẩm" />
-            <TableColumn fx:id="quantityColumn" prefWidth="151.20001220703125" text="Số lượng" />
-            <TableColumn fx:id="statusColumn" prefWidth="157.5999755859375" text="Trạng thái" />
-        </columns>
+      <Label layoutX="142.0" layoutY="22.0" prefHeight="54.0" prefWidth="438.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
+      <TextField layoutX="204.0" layoutY="105.0" prefHeight="26.0" prefWidth="354.0" promptText="Search" />
+      <TableView fx:id="stockInTable"  layoutX="172.0" layoutY="141.0" prefHeight="233.0" prefWidth="386.0">
+          <columns>
+              <TableColumn fx:id="MaNKColumn" text="Mã XK" prefWidth="118.4" />
+              <TableColumn fx:id="MaNVColumn" text="Mã NV" prefWidth="118.4" />
+              <TableColumn fx:id="NgayTaoColumn" text="Ngày tạo" prefWidth="118.4" />
+              <TableColumn fx:id="NguoiDuyetColumn" text="Người duyệt" prefWidth="118.4" />
+              <TableColumn fx:id="NgayDuyetColumn" text="Ngày duyệt" prefWidth="118.4" />
+              <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="118.4" />
+              <TableColumn fx:id="actionColumn" prefWidth="118.4" text="Chi tiết" />
+          </columns>
       </TableView>
       <Button fx:id="btnYeuCauXuatKho" layoutX="475.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleGoToYeuCauXuatKho" prefHeight="60.0" prefWidth="150.0" styleClass="ThirdButton" text="YÊU CẦU XUẤT KHO" textFill="#3d55cf">
          <font>

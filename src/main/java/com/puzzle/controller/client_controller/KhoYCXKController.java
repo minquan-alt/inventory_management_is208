@@ -56,9 +56,11 @@ public class KhoYCXKController implements Initializable {
 
     @FXML private Button logoutButton;
     @FXML private TableView<StockOutDisplayRow> stockOutTable;
-    @FXML private TableColumn<StockOutDisplayRow, Long> requestIdColumn;
-    @FXML private TableColumn<StockOutDisplayRow, String> productNameColumn;
-    @FXML private TableColumn<StockOutDisplayRow, Integer> quantityColumn;
+    @FXML private TableColumn<StockOutDisplayRow, Long> MaXKColumn;
+    @FXML private TableColumn<StockOutDisplayRow, Long> MaNVColumn;
+    @FXML private TableColumn<StockOutDisplayRow, String> NgayTaoColumn;
+    @FXML private TableColumn<StockOutDisplayRow, String> NguoiDuyetColumn;
+    @FXML private TableColumn<StockOutDisplayRow, String> NgayDuyetColumn;
     @FXML private TableColumn<StockOutDisplayRow, String> statusColumn;
     @FXML private TableColumn<StockOutDisplayRow, Void> actionColumn;
 
@@ -80,12 +82,14 @@ public class KhoYCXKController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         logoutButton.setOnAction(event -> handleLogout());
-        
-        requestIdColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getRequestId()));
-        productNameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getProductName()));
-        quantityColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getQuantity()));
 
+        MaXKColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getRequestId()));
+        MaNVColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getEmployeeId()));
+        NgayTaoColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getCreatedAt()));
+        NguoiDuyetColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getApprovedBy()));
+        NgayDuyetColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getApprovedAt()));
         statusColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getStatus()));
+
         statusColumn.setCellFactory(col -> {
             ComboBox<String> comboBox = new ComboBox<>();
             return new TableCell<>() {
@@ -135,6 +139,7 @@ public class KhoYCXKController implements Initializable {
             }
         });
     }
+
 
     private void handleLogout() {
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -193,7 +198,7 @@ public class KhoYCXKController implements Initializable {
 
     private void updateStatus(Long requestId, String newStatus) {
         try {
-            HttpSession session = FXSessionManager.getSession(); // lấy session từ FXSessionManager
+            HttpSession session = FXSessionManager.getSession();
 
             switch (newStatus) {
                 case "APPROVED" -> inventoryService.approveStockOutRequest(requestId, session);
@@ -227,31 +232,25 @@ public class KhoYCXKController implements Initializable {
                 List<StockOutResponse> requests = inventoryService.getStockOutRequests();
 
                 for (StockOutResponse req : requests) {
-                    List<StockOutDetailsResponse> details = inventoryService.getStockOutDetailsResponses(req.getRequest_id());
-                    for (StockOutDetailsResponse detail : details) {
-                        String productName = productService.getProductNameById(detail.getProduct_id());
-                        rows.add(StockOutDisplayRow.builder()
-                                .requestId(req.getRequest_id())
-                                .productName(productName)
-                                .quantity(detail.getQuantity())
-                                .status(req.getStatus())
-                                .build());
-                    }
+                    rows.add(StockOutDisplayRow.builder()
+                            .requestId(req.getRequest_id())
+                            .employeeId(req.getEmployee_id())
+                            .createdAt(req.getCreated_at() != null ? req.getCreated_at().toString() : "")
+                            .approvedBy(req.getApproved_by() != null ? req.getApproved_by().toString() : "Chưa duyệt")
+                            .approvedAt(req.getApproved_at() != null ? req.getApproved_at().toString() : "")
+                            .status(req.getStatus())
+                            .build());
                 }
                 return rows;
             }
         };
 
-        task.setOnSucceeded(e -> {
-            stockOutTable.getItems().setAll(task.getValue());
-        });
-
-        task.setOnFailed(e -> {
-            e.getSource().getException().printStackTrace();
-        });
+        task.setOnSucceeded(e -> stockOutTable.getItems().setAll(task.getValue()));
+        task.setOnFailed(e -> task.getException().printStackTrace());
 
         new Thread(task).start();
     }
+
 
     @Data
     @Builder
@@ -259,8 +258,10 @@ public class KhoYCXKController implements Initializable {
     @AllArgsConstructor
     public static class StockOutDisplayRow {
         Long requestId;
-        String productName;
-        Integer quantity;
+        Long employeeId;
+        String createdAt;
+        String approvedBy;
+        String approvedAt;
         String status;
     }
 

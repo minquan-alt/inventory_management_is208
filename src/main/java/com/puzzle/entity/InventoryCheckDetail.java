@@ -34,6 +34,8 @@ public class InventoryCheckDetail {
     @Column(columnDefinition = "TEXT")
     private String note;
 
+//    @Column(name = "adjustment", nullable = false)
+//    private int adjustment;
     @Transient
     public int getAdjustment() {
         return actualQuantity - systemQuantity;
