@@ -53,11 +53,6 @@
                 <TableColumn fx:id="colChiTiet" prefWidth="90.39990234375" text="Chi tiết" />
             </columns>
         </TableView>
-        <ImageView fx:id="searchIcon" fitHeight="26.0" fitWidth="26.0" layoutX="172.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@/static/images/search-vector-icon.jpg" />
-            </image>
-        </ImageView>
       <Label layoutX="194.0" layoutY="49.0" text="Danh sách nhập kho">
          <font>
             <Font name="System Bold" size="32.0" />
@@ -69,7 +64,7 @@
             <Image url="@../Icon/OIP.jpeg" />
          </image>
       </ImageView>
-      <ImageView fx:id="searchIcon1" fitHeight="26.0" fitWidth="26.0" layoutX="200.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="searchIcon" fitHeight="26.0" fitWidth="26.0" layoutX="200.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Icon/search-vector-icon.jpg" />
          </image>
