@@ -7,15 +7,16 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@../../static/css/style.css" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.DashBoardProductManagerController">
+<AnchorPane prefHeight="600.0" prefWidth="925.0" style="-fx-background-color: #dbe8f2;" stylesheets="@../../static/css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.DashBoardProductManagerController">
    <children>
-      <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="377.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
+      <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="578.0" prefWidth="162.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
          <font>
-            <Font name="System Bold" size="25.0" />
+            <Font name="System Bold" size="36.0" />
          </font>
          <opaqueInsets>
             <Insets />
@@ -24,77 +25,81 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </Label>
-      <Circle fill="DODGERBLUE" layoutX="35.0" layoutY="363.0" radius="13.0" stroke="BLACK" strokeType="INSIDE" />
-         <Button fx:id="logoutButton" layoutX="13.0" layoutY="320.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #dc3545; -fx-background-radius: 5;" text="ĐĂNG XUẤT" textFill="WHITE">
+         <Button fx:id="logoutButton" layoutX="39.0" layoutY="507.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #dc3545; -fx-background-radius: 5;" text="ĐĂNG XUẤT" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="10.0" />
             </font>
         </Button>
-      <Label fx:id="userNameLabel" layoutX="57.0" layoutY="354.0" text="UserName" />
-      <Label layoutX="140.0" layoutY="13.0" prefHeight="122.0" prefWidth="444.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 20;" />
-      <Label fx:id="welcomeLabel" layoutX="163.0" layoutY="24.0" style="-fx-background-color: #FFFFFF;" text="Hello UserName, wellcome back!">
+      <Label fx:id="userNameLabel" layoutX="65.0" layoutY="548.0" text="UserName" />
+      <Label layoutX="186.0" layoutY="13.0" prefHeight="152.0" prefWidth="725.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 20;" />
+      <Label fx:id="welcomeLabel" layoutX="215.0" layoutY="25.0" style="-fx-background-color: #FFFFFF;" text="Hello UserName, wellcome back!">
          <font>
             <Font name="Arial" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="154.0" layoutY="56.0" prefHeight="62.0" prefWidth="200.0" style="-fx-background-color: #418ed1; -fx-background-radius: 20;" textFill="#418ed1" />
-      <Label layoutX="178.0" layoutY="58.0" text="Số lượng tồn kho:" textFill="#fffafa">
+      <Label layoutX="230.0" layoutY="56.0" prefHeight="98.0" prefWidth="260.0" style="-fx-background-color: #418ed1; -fx-background-radius: 20;" textFill="#418ed1" />
+      <Label layoutX="260.0" layoutY="66.0" text="Số lượng tồn kho:" textFill="#fffafa">
          <font>
-            <Font name="System Bold" size="18.0" />
+            <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="inventoryLabel" alignment="CENTER" layoutX="211.0" layoutY="82.0" prefHeight="27.0" prefWidth="86.0" text="1000" textFill="#fffafa">
+      <Label fx:id="inventoryLabel" alignment="CENTER" layoutX="315.0" layoutY="102.0" prefHeight="27.0" prefWidth="86.0" text="1000" textFill="#fffafa">
          <font>
-            <Font name="System Bold" size="18.0" />
+            <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <Label layoutX="373.0" layoutY="56.0" prefHeight="62.0" prefWidth="200.0" style="-fx-background-color: #f2b72f; -fx-background-radius: 20;" textFill="#f2b72f" />
+      <Label layoutX="606.0" layoutY="57.0" prefHeight="98.0" prefWidth="260.0" style="-fx-background-color: #f2b72f; -fx-background-radius: 20;" textFill="#f2b72f" />
       <Label layoutX="389.0" layoutY="71.0" prefHeight="27.0" prefWidth="153.0" textFill="#fffafa">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label layoutX="383.0" layoutY="58.0" text="Số sản phẩm sắp hết:" textFill="#fffafa">
+      <Label layoutX="615.0" layoutY="66.0" text="Số sản phẩm sắp hết:" textFill="#fffafa">
          <font>
-            <Font name="System Bold" size="18.0" />
+            <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="lowStockLabel" alignment="CENTER" layoutX="422.0" layoutY="89.0" prefHeight="27.0" prefWidth="86.0" text="15" textFill="#fffafa">
+      <Label fx:id="lowStockLabel" alignment="CENTER" layoutX="690.0" layoutY="102.0" prefHeight="27.0" prefWidth="86.0" text="15" textFill="#fffafa">
          <font>
-            <Font name="System Bold" size="18.0" />
+            <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <Label layoutX="140.0" layoutY="149.0" prefHeight="240.0" prefWidth="444.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
-      <BarChart fx:id="monthlyChart" layoutX="157.0" layoutY="187.0" prefHeight="173.0" prefWidth="410.0">
+      <Label layoutX="187.0" layoutY="179.0" prefHeight="410.0" prefWidth="725.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
+      <BarChart fx:id="monthlyChart" layoutX="199.0" layoutY="234.0" prefHeight="343.0" prefWidth="705.0">
         <xAxis>
-          <CategoryAxis fx:id="xAxis" side="BOTTOM" />
+          <CategoryAxis side="BOTTOM" fx:id="xAxis" />
         </xAxis>
         <yAxis>
           <NumberAxis fx:id="yAxis" side="LEFT" />
         </yAxis>
       </BarChart>
-      <Label layoutX="157.0" layoutY="159.0" prefHeight="27.0" prefWidth="123.0" text="Biểu đồ tháng">
+      <Label layoutX="215.0" layoutY="185.0" prefHeight="46.0" prefWidth="182.0" text="Biểu đồ tồn kho">
          <font>
-            <Font name="Arial Bold" size="18.0" />
+            <Font name="Arial Bold" size="24.0" />
          </font>
       </Label>
-      <Button layoutX="13.0" layoutY="136.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #0924bc;" text="DASHBOARD" textFill="#fffefe">
+      <Button layoutX="13.0" layoutY="185.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="162.0" styleClass="MainButton" text="DASHBOARD" textFill="#fffefe">
          <font>
-            <Font name="Arial Bold" size="12.0" />
+            <Font name="System Bold" size="16.0" />
          </font>
       </Button>
-      <Button fx:id="inventoryCheckBtn" layoutX="13.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" onAction="#handleGoToInventoryCheck" style="-fx-background-color: #FFFFFF; -fx-border-color: #FFFFFF;" text="KHO" >
+      <Button fx:id="inventoryCheckBtn" layoutX="13.0" layoutY="226.0" mnemonicParsing="false" onAction="#handleGoToInventoryCheck" prefHeight="26.0" prefWidth="162.0" styleClass="SecondButton" text="KHO">
          <font>
-            <Font name="Arial Bold" size="12.0" />
+            <Font name="Arial Bold" size="16.0" />
          </font>
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
       </Button>
-      <Button fx:id="ProductBtn" layoutX="13.0" layoutY="242.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" onAction="#handleGoToProductManagerController" style="-fx-background-color: #FFFFFF;" text="SẢN PHẨM" textFill="#080808">
+      <Button fx:id="ProductBtn" layoutX="13.0" layoutY="268.0" mnemonicParsing="false" onAction="#handleGoToProductManagerController" prefHeight="26.0" prefWidth="162.0" styleClass="SecondButton" text="SẢN PHẨM" textFill="#080808">
          <font>
-            <Font name="Arial Bold" size="12.0" />
+            <Font name="System Bold" size="16.0" />
          </font>
       </Button>
+      <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="39.0" layoutY="545.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Icon/OIP.jpeg" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

@@ -12,10 +12,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@../../static/css/style.css" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.KhoYCXKController">
+<AnchorPane prefHeight="600.0" prefWidth="925.0" style="-fx-background-color: #dbe8f2;" stylesheets="@../../static/css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.KhoYCXKController">
 
     <children>
-        <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="377.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
+        <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="578.0" prefWidth="162.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
             <font>
                 <Font name="System Bold" size="25.0" />
             </font>
@@ -26,71 +26,71 @@
                 <Cursor fx:constant="DEFAULT" />
             </cursor>
         </Label>
-        <Button onAction="#handleDashboard" layoutX="13.0" layoutY="141.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF;" text="DASHBOARD">
+        <Button layoutX="13.0" layoutY="201.0" mnemonicParsing="false" onAction="#handleDashboard" prefHeight="26.0" prefWidth="162.0" styleClass="SecondButton" text="DASHBOARD">
             <font>
-                <Font name="Arial Bold" size="12.0" />
+                <Font name="System Bold" size="16.0" />
             </font>
         </Button>
-        <Button fx:id="logoutButton" layoutX="13.0" layoutY="320.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #dc3545; -fx-background-radius: 5;" text="ĐĂNG XUẤT" textFill="WHITE">
+        <Button fx:id="logoutButton" layoutX="39.0" layoutY="508.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #dc3545; -fx-background-radius: 5;" text="ĐĂNG XUẤT" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="10.0" />
             </font>
         </Button>
-        <Label fx:id="userNameLabel" layoutX="57.0" layoutY="354.0" text="UserName" />
-        <Label layoutX="146.0" layoutY="85.0" prefHeight="304.0" prefWidth="438.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
-        <Button layoutX="13.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #0924bc;" text="KHO" textFill="WHITE">
+        <Label fx:id="userNameLabel" layoutX="65.0" layoutY="548.0" text="UserName" />
+        <Label layoutX="187.0" layoutY="140.0" prefHeight="450.0" prefWidth="725.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
+        <Button layoutX="13.0" layoutY="242.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="162.0" styleClass="MainButton" text="KHO" textFill="WHITE">
             <font>
-                <Font name="Arial Bold" size="12.0" />
+                <Font name="System Bold" size="16.0" />
             </font>
             <opaqueInsets>
                 <Insets />
             </opaqueInsets>
         </Button>
-        <Button layoutX="13.0" layoutY="237.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" onAction="#handleGoToProductManagerController" style="-fx-background-color: #FFFFFF;" text="SẢN PHẨM" textFill="#080808">
+        <Button layoutX="13.0" layoutY="284.0" mnemonicParsing="false" onAction="#handleGoToProductManagerController" prefHeight="26.0" prefWidth="162.0" styleClass="SecondButton" text="SẢN PHẨM" textFill="#080808">
             <font>
-                <Font name="Arial Bold" size="12.0" />
+                <Font name="Arial Bold" size="16.0" />
             </font>
         </Button>
-        <Label layoutX="142.0" layoutY="22.0" prefHeight="54.0" prefWidth="438.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
-        <Button onAction="#handleYeuCauNhapKho" layoutX="172.0" layoutY="33.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-border-width: 2; -fx-border-color: #a1d6ff; -fx-border-radius: 5;" text="YÊU CẦU NHẬP KHO" textFill="#3d55cf">
+        <Label layoutX="186.0" layoutY="13.0" prefHeight="110.0" prefWidth="725.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
+        <Button layoutX="245.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleYeuCauNhapKho" prefHeight="60.0" prefWidth="150.0" styleClass="ThirdButton" text="YÊU CẦU NHẬP KHO" textFill="#3d55cf">
             <font>
-                <Font name="Arial Bold" size="9.0" />
+                <Font name="System Bold" size="12.0" />
             </font>
             <opaqueInsets>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </opaqueInsets>
         </Button>
-        <Button onAction="#handleYeuCauXuatKho" layoutX="310.0" layoutY="33.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="110.0" style="-fx-background-color: #0924bc;" text="YÊU CẦU XUẤT KHO" textFill="WHITE">
+        <Button layoutX="475.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleYeuCauXuatKho" prefHeight="60.0" prefWidth="150.0" styleClass="MainButton" text="YÊU CẦU XUẤT KHO" textFill="WHITE">
             <font>
-                <Font name="Arial Bold" size="9.0" />
+                <Font name="System Bold" size="12.0" />
             </font>
         </Button>
-        <TextField layoutX="208.0" layoutY="105.0" prefHeight="26.0" prefWidth="351.0" promptText="Search" />
-        <TableView fx:id="stockOutTable" layoutX="172.0" layoutY="141.0" prefHeight="233.0" prefWidth="386.0">
+        <TextField layoutX="227.0" layoutY="159.0" prefHeight="26.0" prefWidth="665.0" promptText="Search" />
+        <TableView fx:id="stockOutTable" layoutX="200.0" layoutY="195.0" prefHeight="383.0" prefWidth="695.0">
             <columns>
-                <TableColumn fx:id="requestIdColumn" prefWidth="74.4000244140625" text="MaYCXK" />
-                <TableColumn fx:id="productNameColumn" prefWidth="155.20001220703125" text="Tên sản phẩm" />
-                <TableColumn fx:id="quantityColumn" prefWidth="70.4000244140625" text="Số lượng" />
-                <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="120.0" />
-                <TableColumn fx:id="actionColumn" prefWidth="100.0" text="Chi tiết" />
+                <TableColumn fx:id="requestIdColumn" prefWidth="99.19998168945312" text="MaYCXK" />
+                <TableColumn fx:id="productNameColumn" prefWidth="231.20004272460938" text="Tên sản phẩm" />
+                <TableColumn fx:id="quantityColumn" prefWidth="108.800048828125" text="Số lượng" />
+                <TableColumn fx:id="statusColumn" prefWidth="147.2000732421875" text="Trạng thái" />
+                <TableColumn fx:id="actionColumn" prefWidth="111.199951171875" text="Chi tiết" />
             </columns>
         </TableView>
-      <Button onAction="#handleKiemKe" layoutX="447.0" layoutY="33.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-border-width: 2; -fx-border-color: #a1d6ff; -fx-border-radius: 5;" text="KIỂM KÊ" textFill="#3d55cf">
+      <Button layoutX="705.0" layoutY="33.0" mnemonicParsing="false" onAction="#handleKiemKe" prefHeight="60.0" prefWidth="150.0" styleClass="ThirdButton" text="KIỂM KÊ" textFill="#3d55cf">
          <font>
-            <Font name="Arial Bold" size="9.0" />
+            <Font name="System Bold" size="12.0" />
          </font>
          <opaqueInsets>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </opaqueInsets>
       </Button>
-      <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="172.0" layoutY="105.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="200.0" layoutY="159.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../../../../search-vector-icon.jpg" />
+            <Image url="@../Icon/search-vector-icon.jpg" />
          </image>
       </ImageView>
-      <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="22.0" layoutY="351.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="39.0" layoutY="545.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../../../OIP.jpeg" />
+            <Image url="@../Icon/OIP.jpeg" />
          </image>
       </ImageView>
     </children>

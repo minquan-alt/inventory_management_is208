@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@../../static/css/style.css" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.HumanManagerController">
+<AnchorPane prefHeight="600.0" prefWidth="925.0" style="-fx-background-color: #dbe8f2;" stylesheets="@../../static/css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.HumanManagerController">
     <children>
-        <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="377.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
+        <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="578.0" prefWidth="162.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
             <font>
-                <Font name="System Bold" size="25.0" />
+                <Font name="System Bold" size="32.0" />
             </font>
             <opaqueInsets>
                 <Insets />
@@ -25,48 +25,48 @@
                 <Cursor fx:constant="DEFAULT" />
             </cursor>
         </Label>
-        <Button fx:id="logoutButton" layoutX="13.0" layoutY="320.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #dc3545; -fx-background-radius: 5;" text="ĐĂNG XUẤT" textFill="WHITE">
+        <Button fx:id="logoutButton" layoutX="39.0" layoutY="502.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #dc3545; -fx-background-radius: 5;" text="ĐĂNG XUẤT" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="10.0" />
             </font>
         </Button>
-        <Label fx:id="menu_username" layoutX="57.0" layoutY="354.0" text="UserName" />
-        <Label layoutX="146.0" layoutY="11.0" prefHeight="378.0" prefWidth="438.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
-        <Button layoutX="13.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #0924bc;" text="NHÂN VIÊN" textFill="WHITE">
+        <Label fx:id="menu_username" layoutX="65.0" layoutY="548.0" text="UserName" />
+        <Label layoutX="187.0" layoutY="12.0" prefHeight="578.0" prefWidth="725.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
+        <Button layoutX="13.0" layoutY="253.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="162.0" styleClass="MainButton" text="NHÂN VIÊN" textFill="WHITE">
             <font>
-                <Font name="Arial Bold" size="12.0" />
+                <Font name="System Bold" size="16.0" />
             </font>
             <opaqueInsets>
                 <Insets />
             </opaqueInsets>
         </Button>
-        <TextField fx:id="searchUsers" layoutX="203.0" layoutY="21.0" prefHeight="26.0" prefWidth="354.0" promptText="Search by name" />
-        <TableView fx:id="tableView" layoutX="172.0" layoutY="93.0" prefHeight="282.0" prefWidth="386.0">
+        <TextField fx:id="searchUsers" layoutX="227.0" layoutY="21.0" prefHeight="26.0" prefWidth="665.0" promptText="Search by name" />
+        <TableView fx:id="tableView" layoutX="200.0" layoutY="99.0" prefHeight="479.0" prefWidth="695.0">
             <columns>
-                <TableColumn fx:id="colId" prefWidth="76.800048828125" text="Mã nhân viên" />
-                <TableColumn fx:id="colName" prefWidth="163.20001220703125" text="Họ và tên" />
-                <TableColumn fx:id="colUsername" prefWidth="163.20001220703125" text="Tên đăng nhập" />
-                <TableColumn fx:id="colRole" prefWidth="68.00006103515625" text="Chức vụ" />
-                <TableColumn fx:id="colStatus" prefWidth="76.800048828125" text="Trạng thái" />
-                <TableColumn fx:id="colUpdate" prefWidth="76.800048828125" text="Sửa" />
-                <TableColumn fx:id="colDelete" prefWidth="76.800048828125" text="Xoá" />
+                <TableColumn fx:id="colId" prefWidth="92.800048828125" text="Mã nhân viên" />
+                <TableColumn fx:id="colName" prefWidth="159.199951171875" text="Họ và tên" />
+                <TableColumn fx:id="colUsername" prefWidth="108.0" text="Tên đăng nhập" />
+                <TableColumn fx:id="colRole" prefWidth="90.39996337890625" text="Chức vụ" />
+                <TableColumn fx:id="colStatus" prefWidth="112.0" text="Trạng thái" />
+                <TableColumn fx:id="colUpdate" prefWidth="65.60009765625" text="Sửa" />
+                <TableColumn fx:id="colDelete" prefWidth="65.5999755859375" text="Xoá" />
             </columns>
         </TableView>
-        <ImageView fx:id="searchIcon" fitHeight="26.0" fitWidth="26.0" layoutX="172.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fx:id="searchIcon" fitHeight="26.0" fitWidth="26.0" layoutX="200.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@/static/images/search-vector-icon.jpg" />
+                <Image url="@../Icon/search-vector-icon.jpg" />
             </image>
         </ImageView>
-        <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="22.0" layoutY="352.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="39.0" layoutY="545.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@/static/images/OIP.jpeg" />
+                <Image url="@../Icon/OIP.jpeg" />
             </image>
         </ImageView>
-        <Label layoutX="172.0" layoutY="56.0" text="Danh sách nhân viên">
+        <Label layoutX="194.0" layoutY="49.0" text="Danh sách nhân viên">
             <font>
-                <Font name="Arial Bold" size="15.0" />
+                <Font name="System Bold" size="32.0" />
             </font>
         </Label>
-        <Button fx:id="addUser" layoutX="470.0" layoutY="60.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="87.0" style="-fx-background-color: #46a0ef;" text="Thêm" textFill="WHITE" />
+        <Button fx:id="addUser" layoutX="806.0" layoutY="59.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="87.0" styleClass="AddButton" text="THÊM" textFill="WHITE" />
     </children>
 </AnchorPane>
