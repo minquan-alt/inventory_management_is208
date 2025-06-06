@@ -1,3 +1,31 @@
-.button {
+.MainButton {
     -fx-cursor: hand;
+    -fx-background-color: #0924bc;
 }
+.button:hover {
+    -fx-background-color: #adad61;
+}
+.button:pressed {
+    -fx-background-color: #adad61;
+}
+.SecondButton{
+    -fx-cursor: hand;
+    -fx-background-color: #FFFFFF;
+}
+
+.ThirdButton {
+    -fx-background-color: #FFFFFF;
+    -fx-border-width: 2;
+    -fx-border-color:  #a1d6ff;
+    -fx-border-radius: 5;
+}
+
+.AddButton {
+    -fx-background-color: #46a0ef;
+}
+
+.LoginButton {
+    -fx-background-color: #1986df;
+}
+
+.

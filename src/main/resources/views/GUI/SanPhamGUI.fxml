@@ -12,12 +12,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #dbe8f2;" stylesheets="@../../static/css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.ProductManagerController">
+<AnchorPane prefHeight="600.0" prefWidth="925.0" style="-fx-background-color: #dbe8f2;" stylesheets="@../../static/css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.ProductManagerController">
 
     <children>
-        <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="377.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
+        <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="578.0" prefWidth="162.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
             <font>
-                <Font name="System Bold" size="25.0" />
+                <Font name="System Bold" size="32.0" />
             </font>
             <opaqueInsets>
                 <Insets />
@@ -26,49 +26,54 @@
                 <Cursor fx:constant="DEFAULT" />
             </cursor>
         </Label>
-        <Button layoutX="13.0" layoutY="141.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" onAction="#handleGoToDashBoardProductManager" style="-fx-background-color: #FFFFFF;" text="DASHBOARD">
+        <Button layoutX="13.0" layoutY="185.0" mnemonicParsing="false" onAction="#handleGoToDashBoardProductManager" prefHeight="26.0" prefWidth="162.0" styleClass="SecondButton" text="DASHBOARD">
             <font>
-                <Font name="Arial Bold" size="12.0" />
+                <Font name="System Bold" size="16.0" />
             </font>
         </Button>
-        <Label fx:id="menu_username" layoutX="57.0" layoutY="354.0" text="UserName" />
-        <Label layoutX="146.0" layoutY="11.0" prefHeight="378.0" prefWidth="438.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
-        <Button layoutX="13.0" layoutY="237.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #0924bc;" text="SẢN PHẢM" textFill="WHITE">
+        <Label fx:id="menu_username" layoutX="47.0" layoutY="548.0" text="UserName" />
+        <Label layoutX="187.0" layoutY="12.0" prefHeight="578.0" prefWidth="725.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
+        <Button layoutX="13.0" layoutY="268.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="162.0" styleClass="MainButton" text="SẢN PHẢM" textFill="WHITE">
             <font>
-                <Font name="Arial Bold" size="12.0" />
+                <Font name="System Bold" size="16.0" />
             </font>
             <opaqueInsets>
                 <Insets />
             </opaqueInsets>
         </Button>
-        <Button layoutX="13.0" layoutY="186.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" onAction="#handleGoToInventory" style="-fx-background-color: #FFFFFF;" text="KHO" textFill="#080808">
+        <Button layoutX="13.0" layoutY="226.0" mnemonicParsing="false" onAction="#handleGoToInventory" prefHeight="26.0" prefWidth="162.0" styleClass="SecondButton" text="KHO" textFill="#080808">
             <font>
-                <Font name="Arial Bold" size="12.0" />
+                <Font name="System Bold" size="16.0" />
             </font>
         </Button>
-        <TextField fx:id="searchProducts" layoutX="198.0" layoutY="24.0" prefHeight="26.0" prefWidth="370.0" promptText="Search" />
-      <ImageView fx:id="searchIcon" fitHeight="26.0" fitWidth="26.0" layoutX="164.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@/static/images/search-vector-icon.jpg" />
-         </image>
-      </ImageView>
-      <Button fx:id="addProduct" layoutX="438.0" layoutY="59.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="129.0" style="-fx-background-color: #46a0ef;" text="Thêm sản phẩm" textFill="WHITE" />
-      <Label layoutX="164.0" layoutY="64.0" prefHeight="18.0" prefWidth="170.0" text="Danh sách sản phẩm">
+        <TextField fx:id="searchProducts" layoutX="227.0" layoutY="21.0" prefHeight="26.0" prefWidth="665.0" promptText="Search" />
+      <Button fx:id="addProduct" layoutX="765.0" layoutY="60.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="129.0" styleClass="AddButton" text="THÊM SẢN PHẨM" textFill="WHITE" />
+      <Label layoutX="194.0" layoutY="49.0" prefHeight="47.0" prefWidth="328.0" text="Danh sách sản phẩm">
          <font>
-            <Font name="Arial Bold" size="15.0" />
+            <Font name="System Bold" size="32.0" />
          </font>
       </Label>
-      <TableView fx:id="tableView" layoutX="164.0" layoutY="96.0" prefHeight="282.0" prefWidth="404.0">
+      <TableView fx:id="tableView" layoutX="200.0" layoutY="99.0" prefHeight="479.0" prefWidth="695.0">
          <columns>
-            <TableColumn fx:id="colId" prefWidth="84.800048828125" text="Mã sản phẩm" />
-            <TableColumn fx:id="colName" prefWidth="156.79998779296875" text="Tên sản phẩm" />
-            <TableColumn fx:id="colUnit" prefWidth="71.19989013671875" text="Đơn vị" />
-            <TableColumn fx:id="colSellingPrice" prefWidth="102.4000244140625" text="Giá nhập" />
-            <TableColumn fx:id="colCostPrice" prefWidth="98.39999389648438" text="Giá bán" />
-            <TableColumn fx:id="colDescription" prefWidth="116.7999267578125" text="Ghi chú" />
-            <TableColumn fx:id="colUpdate" prefWidth="76.800048828125" text="Sửa" />
-            <TableColumn fx:id="colDelete" prefWidth="75.0" text="Xóa" />
+            <TableColumn fx:id="colId" prefWidth="80.80001831054688" text="Mã sản phẩm" />
+            <TableColumn fx:id="colName" prefWidth="140.0" text="Tên sản phẩm" />
+            <TableColumn fx:id="colUnit" prefWidth="61.5999755859375" text="Đơn vị" />
+            <TableColumn fx:id="colSellingPrice" prefWidth="83.19998168945312" text="Giá nhập" />
+            <TableColumn fx:id="colCostPrice" prefWidth="78.4000244140625" text="Giá bán" />
+            <TableColumn fx:id="colDescription" prefWidth="128.0" text="Ghi chú" />
+            <TableColumn fx:id="colUpdate" prefWidth="60.0" text="Sửa" />
+            <TableColumn fx:id="colDelete" prefWidth="63.199951171875" text="Xóa" />
          </columns>
       </TableView>
+      <ImageView fx:id="searchIcon" fitHeight="26.0" fitWidth="26.0" layoutX="200.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Icon/search-vector-icon.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="21.0" layoutY="545.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Icon/OIP.jpeg" />
+         </image>
+      </ImageView>
     </children>
 </AnchorPane>
