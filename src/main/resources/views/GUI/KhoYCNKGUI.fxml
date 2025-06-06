@@ -31,6 +31,7 @@
                 <Font name="Arial Bold" size="12.0" />
             </font>
         </Button>
+
          <Button fx:id="logoutButton" layoutX="13.0" layoutY="320.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #dc3545; -fx-background-radius: 5;" text="ĐĂNG XUẤT" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="10.0" />
@@ -54,12 +55,15 @@
       <Label layoutX="142.0" layoutY="22.0" prefHeight="54.0" prefWidth="438.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
       <TextField layoutX="204.0" layoutY="105.0" prefHeight="26.0" prefWidth="354.0" promptText="Search" />
       <TableView fx:id="stockInTable"  layoutX="172.0" layoutY="141.0" prefHeight="233.0" prefWidth="386.0">
-        <columns>
-          <TableColumn fx:id="requestIdColumn" prefWidth="74.4000244140625" text="MaYCNK" />
-          <TableColumn fx:id="productNameColumn" prefWidth="155.20001220703125" text="Tên sản phẩm" />
-            <TableColumn fx:id="quantityColumn" prefWidth="70.4000244140625" text="Số lượng" />
-            <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="120.0" />
-        </columns>
+          <columns>
+              <TableColumn fx:id="MaNKColumn" text="Mã XK" prefWidth="59.2" />
+              <TableColumn fx:id="MaNVColumn" text="Mã NV" prefWidth="160.0" />
+              <TableColumn fx:id="NgayTaoColumn" text="Ngày tạo" prefWidth="86.4" />
+              <TableColumn fx:id="NguoiDuyetColumn" text="Người duyệt" prefWidth="86.4" />
+              <TableColumn fx:id="NgayDuyetColumn" text="Ngày duyệt" prefWidth="86.4" />
+              <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="120.0" />
+              <TableColumn fx:id="actionColumn" prefWidth="100.0" text="Chi tiết" />
+          </columns>
       </TableView>
       <Button fx:id="btnYeuCauXuatKho" onAction="#handleGoToYeuCauXuatKho" layoutX="310.0" layoutY="33.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="110.0" style="-fx-background-color: #FFFFFF; -fx-border-width: 2; -fx-border-color: #a1d6ff; -fx-border-radius: 5;" text="YÊU CẦU XUẤT KHO" textFill="#3d55cf">
          <font>

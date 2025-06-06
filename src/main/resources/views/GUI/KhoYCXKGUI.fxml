@@ -68,9 +68,11 @@
         <TextField layoutX="208.0" layoutY="105.0" prefHeight="26.0" prefWidth="351.0" promptText="Search" />
         <TableView fx:id="stockOutTable" layoutX="172.0" layoutY="141.0" prefHeight="233.0" prefWidth="386.0">
             <columns>
-                <TableColumn fx:id="requestIdColumn" prefWidth="74.4000244140625" text="MaYCXK" />
-                <TableColumn fx:id="productNameColumn" prefWidth="155.20001220703125" text="Tên sản phẩm" />
-                <TableColumn fx:id="quantityColumn" prefWidth="70.4000244140625" text="Số lượng" />
+                <TableColumn fx:id="MaXKColumn" text="Mã XK" prefWidth="59.2" />
+                <TableColumn fx:id="MaNVColumn" text="Mã NV" prefWidth="160.0" />
+                <TableColumn fx:id="NgayTaoColumn" text="Ngày tạo" prefWidth="86.4" />
+                <TableColumn fx:id="NguoiDuyetColumn" text="Người duyệt" prefWidth="86.4" />
+                <TableColumn fx:id="NgayDuyetColumn" text="Ngày duyệt" prefWidth="86.4" />
                 <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="120.0" />
                 <TableColumn fx:id="actionColumn" prefWidth="100.0" text="Chi tiết" />
             </columns>
