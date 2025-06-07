@@ -16,10 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -28,6 +32,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 @Controller
 public class DashBoardProductManagerController {
@@ -63,8 +75,133 @@ public class DashBoardProductManagerController {
     }
 
     private void setupEventHandlers() {
+        lowStockLabel.setOnMouseClicked(event -> handleWarningProduct());
         logoutButton.setOnAction(event -> handleLogout());
     }
+
+
+private void handleWarningProduct() {
+    List<InventoryResponse> inventoryProducts = inventoryService.getInventory();
+    
+    List<InventoryResponse> lowStockProducts = inventoryProducts.stream()
+            .filter(product -> product.getQuantity() < LOW_STOCK_THRESHOLD)
+            .collect(Collectors.toList());
+    
+    if (lowStockProducts.isEmpty()) {
+        AlertUtil.showInfo("Thông báo", "Không có sản phẩm nào sắp hết hàng!");
+        return;
+    }
+    
+    showWarningProductModal(lowStockProducts);
+}
+
+private void showWarningProductModal(List<InventoryResponse> lowStockProducts) {
+    try {
+        Stage modalStage = new Stage();
+        modalStage.initModality(Modality.APPLICATION_MODAL);
+        modalStage.setTitle("Cảnh báo sản phẩm sắp hết hàng");
+        modalStage.setResizable(false);
+        
+        VBox mainLayout = new VBox(10);
+        mainLayout.setPadding(new Insets(20));
+        mainLayout.setAlignment(Pos.CENTER);
+        
+        Label titleLabel = new Label("Danh sách sản phẩm sắp hết hàng");
+        titleLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #d32f2f;");
+        
+        TableView<InventoryResponse> tableView = new TableView<>();
+        tableView.setPrefWidth(500);
+        tableView.setPrefHeight(300);
+        
+        TableColumn<InventoryResponse, String> nameColumn = new TableColumn<>("Tên sản phẩm");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("product_name"));
+        nameColumn.setPrefWidth(300);
+        
+        TableColumn<InventoryResponse, Integer> quantityColumn = new TableColumn<>("Số lượng");
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        quantityColumn.setPrefWidth(100);
+        
+        quantityColumn.setCellFactory(column -> {
+            return new TableCell<InventoryResponse, Integer>() {
+                @Override
+                protected void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        setText(item.toString());
+                        setStyle("-fx-text-fill: #d32f2f; -fx-font-weight: bold;");
+                    }
+                }
+            };
+        });
+        
+        TableColumn<InventoryResponse, String> statusColumn = new TableColumn<>("Trạng thái");
+        statusColumn.setCellValueFactory(cellData -> {
+            int quantity = cellData.getValue().getQuantity();
+            if (quantity == 0) {
+                return new SimpleStringProperty("Hết hàng");
+            } else if (quantity < LOW_STOCK_THRESHOLD) {
+                return new SimpleStringProperty("Sắp hết");
+            } else {
+                return new SimpleStringProperty("Bình thường");
+            }
+        });
+        statusColumn.setPrefWidth(100);
+        
+        statusColumn.setCellFactory(column -> {
+            return new TableCell<InventoryResponse, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        setText(item);
+                        if ("Hết hàng".equals(item)) {
+                            setStyle("-fx-text-fill: #d32f2f; -fx-font-weight: bold;");
+                        } else if ("Sắp hết".equals(item)) {
+                            setStyle("-fx-text-fill: #ff9800; -fx-font-weight: bold;");
+                        } else {
+                            setStyle("-fx-text-fill: #4caf50; -fx-font-weight: bold;");
+                        }
+                    }
+                }
+            };
+        });
+        
+        tableView.getColumns().addAll(nameColumn, quantityColumn, statusColumn);
+        
+        tableView.setItems(FXCollections.observableArrayList(lowStockProducts));
+        
+        Label summaryLabel = new Label(String.format("Tổng cộng: %d sản phẩm sắp hết hàng", lowStockProducts.size()));
+        summaryLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
+        
+        Button closeButton = new Button("Đóng");
+        closeButton.setPrefWidth(100);
+        closeButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;");
+        closeButton.setOnAction(e -> modalStage.close());
+
+        HBox buttonLayout = new HBox(10);
+        buttonLayout.setAlignment(Pos.CENTER);
+        buttonLayout.getChildren().addAll(closeButton);
+        
+        mainLayout.getChildren().addAll(titleLabel, tableView, summaryLabel, buttonLayout);
+        
+        Scene scene = new Scene(mainLayout);
+        modalStage.setScene(scene);
+        
+        modalStage.centerOnScreen();
+        
+        modalStage.showAndWait();
+        
+    } catch (Exception e) {
+        AlertUtil.showError("Lỗi khi hiển thị danh sách sản phẩm: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
 
     private void handleLogout() {
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
