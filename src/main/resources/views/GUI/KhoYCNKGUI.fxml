@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="925.0" style="-fx-background-color: #dbe8f2;" stylesheets="@../../static/css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.KhoYCNKController">
+<AnchorPane prefHeight="600.0" prefWidth="925.0" style="-fx-background-color: #dbe8f2;" stylesheets="@../../static/css/style.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.KhoYCNKController">
 
     <children>
         <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="578.0" prefWidth="162.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
@@ -53,14 +53,14 @@
         </Button>
       <Label layoutX="142.0" layoutY="22.0" prefHeight="54.0" prefWidth="438.0" style="-fx-background-radius: 20; -fx-background-color: #FFFFFF;" />
       <TextField layoutX="204.0" layoutY="105.0" prefHeight="26.0" prefWidth="354.0" promptText="Search" />
-      <TableView fx:id="stockInTable"  layoutX="172.0" layoutY="141.0" prefHeight="233.0" prefWidth="386.0">
+      <TableView fx:id="stockInTable" layoutX="198.0" layoutY="151.0" prefHeight="427.0" prefWidth="706.0">
           <columns>
-              <TableColumn fx:id="MaNKColumn" text="Mã XK" prefWidth="118.4" />
-              <TableColumn fx:id="MaNVColumn" text="Mã NV" prefWidth="118.4" />
-              <TableColumn fx:id="NgayTaoColumn" text="Ngày tạo" prefWidth="118.4" />
-              <TableColumn fx:id="NguoiDuyetColumn" text="Người duyệt" prefWidth="118.4" />
-              <TableColumn fx:id="NgayDuyetColumn" text="Ngày duyệt" prefWidth="118.4" />
-              <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="118.4" />
+              <TableColumn fx:id="MaNKColumn" prefWidth="118.4" text="Mã XK" />
+              <TableColumn fx:id="MaNVColumn" prefWidth="118.4" text="Mã NV" />
+              <TableColumn fx:id="NgayTaoColumn" prefWidth="118.4" text="Ngày tạo" />
+              <TableColumn fx:id="NguoiDuyetColumn" prefWidth="118.4" text="Người duyệt" />
+              <TableColumn fx:id="NgayDuyetColumn" prefWidth="118.4" text="Ngày duyệt" />
+              <TableColumn fx:id="statusColumn" prefWidth="118.4" text="Trạng thái" />
               <TableColumn fx:id="actionColumn" prefWidth="118.4" text="Chi tiết" />
           </columns>
       </TableView>
@@ -95,7 +95,7 @@
             <Image url="@../Icon/OIP.jpeg" />
          </image>
       </ImageView>
-      <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="200.0" layoutY="159.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="174.0" layoutY="105.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Icon/search-vector-icon.jpg" />
          </image>

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="925.0" style="-fx-background-color: #dbe8f2;" stylesheets="@../../static/css/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.KhoYCXKController">
+<AnchorPane prefHeight="600.0" prefWidth="925.0" style="-fx-background-color: #dbe8f2;" stylesheets="@../../static/css/style.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.KhoYCXKController">
 
     <children>
         <Label alignment="TOP_CENTER" layoutX="13.0" layoutY="11.0" prefHeight="578.0" prefWidth="162.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;" text="MENU">
@@ -68,7 +68,7 @@
         <TextField layoutX="227.0" layoutY="159.0" prefHeight="26.0" prefWidth="665.0" promptText="Search" />
         <TableView fx:id="stockOutTable" layoutX="200.0" layoutY="195.0" prefHeight="383.0" prefWidth="695.0">
             <columns>
-                <TableColumn fx:id="MaXKColumn" text="Mã XK" prefWidth=100.0" />
+                <TableColumn fx:id="MaXKColumn" text="Mã XK" prefWidth="100.0" />
                 <TableColumn fx:id="MaNVColumn" text="Mã NV" prefWidth="100.0" />
                 <TableColumn fx:id="NgayTaoColumn" text="Ngày tạo" prefWidth="100.0" />
                 <TableColumn fx:id="NguoiDuyetColumn" text="Người duyệt" prefWidth="100.0" />

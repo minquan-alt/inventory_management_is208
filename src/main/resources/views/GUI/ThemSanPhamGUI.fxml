@@ -15,7 +15,7 @@
 
 
 <?import javafx.scene.text.Text?>
-<DialogPane prefHeight="267.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<DialogPane prefHeight="267.0" prefWidth="450.0" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.puzzle.controller.client_controller.ProductAddController">
    <content>
       <VBox prefHeight="229.0" prefWidth="450.0" spacing="10.0">

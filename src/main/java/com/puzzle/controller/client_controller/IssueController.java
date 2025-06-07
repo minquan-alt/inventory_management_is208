@@ -112,41 +112,49 @@ public class IssueController {
         colMaXK.setCellValueFactory(new PropertyValueFactory<>("request_id"));
         colMaNV.setCellValueFactory(new PropertyValueFactory<>("employee_id"));
         colNgayTao.setCellValueFactory(new PropertyValueFactory<>("created_at"));
-        colNguoiDuyet.setCellFactory(new Callback<TableColumn<StockOutResponse, String>, TableCell<StockOutResponse, String>>() {
-            @Override
-            public TableCell<StockOutResponse, String> call(TableColumn<StockOutResponse, String> param) {
-                return new TableCell<StockOutResponse, String>() {
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null || item.trim().isEmpty()) {
-                            setText("Chưa duyệt");
-                            setStyle("-fx-text-fill: #666666; -fx-font-style: italic;");
-                        } else {
-                            setText(item);
-                            setStyle("");
-                        }
+        colNguoiDuyet.setCellValueFactory(new PropertyValueFactory<>("approver_by"));
+    colNguoiDuyet.setCellFactory(new Callback<TableColumn<StockOutResponse, String>, TableCell<StockOutResponse, String>>() {
+        @Override
+        public TableCell<StockOutResponse, String> call(TableColumn<StockOutResponse, String> param) {
+            return new TableCell<StockOutResponse, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else if (item == null || item.trim().isEmpty()) {
+                        setText("Chưa duyệt");
+                        setStyle("-fx-text-fill: #666666; -fx-font-style: italic;");
+                    } else {
+                        setText(item);
+                        setStyle("");
                     }
-                };
-            }
-        });
-        colNgayDuyet.setCellFactory(new Callback<TableColumn<StockOutResponse,String>,TableCell<StockOutResponse,String>>() {
-            public TableCell<StockOutResponse, String> call (TableColumn<StockOutResponse, String> param) {
-                return new TableCell<StockOutResponse, String>() {
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null || item.trim().isEmpty()) {
-                            setText("Chưa duyệt");
-                            setStyle("-fx-text-fill: #666666; -fx-font-style: italic;");
-                        } else {
-                            setText(item);
-                            setStyle("");
-                        }
+                }
+            };
+        }
+    });
+        colNgayDuyet.setCellValueFactory(new PropertyValueFactory<>("approver_at"));
+    colNgayDuyet.setCellFactory(new Callback<TableColumn<StockOutResponse, String>, TableCell<StockOutResponse, String>>() {
+        public TableCell<StockOutResponse, String> call(TableColumn<StockOutResponse, String> param) {
+            return new TableCell<StockOutResponse, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else if (item == null || item.trim().isEmpty()) {
+                        setText("Chưa duyệt");
+                        setStyle("-fx-text-fill: #666666; -fx-font-style: italic;");
+                    } else {
+                        setText(item);
+                        setStyle("");
                     }
-                };
-            }
-        });
+                }
+            };
+        }
+    });
         colTrangThai.setCellValueFactory(new PropertyValueFactory<>("status"));
         colChiTiet.setCellFactory(new Callback<TableColumn<StockOutResponse,Void>,TableCell<StockOutResponse,Void>>() {
             public TableCell<StockOutResponse, Void> call(TableColumn<StockOutResponse, Void> param) {
@@ -183,7 +191,7 @@ public class IssueController {
             IssueFormController issueFormController = loader.getController();
             
             if (issueFormController != null) {
-                issueFormController.initData(user);
+                issueFormController.initData(user, inventoryService);
             }
 
             Dialog<ButtonType> dialog = new Dialog<>();
@@ -196,7 +204,7 @@ public class IssueController {
             dialog.showAndWait();
 
             if (issueFormController != null && issueFormController.isSubmitted()) {
-                return;
+                updateUI();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -277,11 +285,12 @@ public class IssueController {
             
             if (Platform.isFxApplicationThread()) {
                 issueTable.setItems(data);
+                issueTable.refresh();
             } else {
                 Platform.runLater(() -> issueTable.setItems(data));
+                issueTable.refresh();
             }
 
-            issueTable.refresh();
             
         } catch (Exception e) {
             e.printStackTrace();

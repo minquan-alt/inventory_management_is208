@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../../static/css/style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.puzzle.controller.client_controller.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../../static/css/style.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.LoginController">
     <children>
         <AnchorPane prefHeight="400.0" prefWidth="260.0" style="-fx-background-color: #1986df;" />
       <Button fx:id="loginButton" layoutX="319.0" layoutY="265.0" mnemonicParsing="false" onAction="#clickSignUp" prefHeight="15.0" prefWidth="84.0" styleClass="LoginButton" text="Sign in" textAlignment="CENTER" textFill="WHITE">

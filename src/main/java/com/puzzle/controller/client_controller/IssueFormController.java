@@ -14,7 +14,6 @@ import com.puzzle.exception.AppException;
 import com.puzzle.service.InventoryService;
 import com.puzzle.utils.AlertUtil;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javafx.collections.FXCollections;
@@ -39,7 +38,6 @@ public class IssueFormController {
     @FXML
     private DialogPane dialogPane;
 
-    @Autowired
     private InventoryService inventoryService;
     private UserResponse user;
     private Map<String, Long> productToId = new HashMap<>();
@@ -72,7 +70,8 @@ public class IssueFormController {
     }
 
 
-    public void initData(UserResponse user) {
+    public void initData(UserResponse user, InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
         this.user = user;
         initializeForm();
     }

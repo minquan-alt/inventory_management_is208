@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<DialogPane prefHeight="385.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.ReceiptDetailController">
+<DialogPane prefHeight="385.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.puzzle.controller.client_controller.ReceiptDetailController">
    <content>
       <VBox prefHeight="400.0" prefWidth="500.0" spacing="10.0">
          <padding>
