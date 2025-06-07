@@ -17,6 +17,8 @@ import com.puzzle.utils.AlertUtil;
 import com.puzzle.utils.SceneManager;
 
 import javafx.concurrent.Task;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -27,14 +29,6 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -118,11 +112,51 @@ public class KhoYCNKController implements Initializable {
             {
                 btn.setOnAction(event -> {
                     StockInDisplayRow row = getTableView().getItems().get(getIndex());
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Chi tiết phiếu nhập");
-                    alert.setContentText("ID: " + row.getRequestId() + "\nTrạng thái: " + row.getStatus());
-                    alert.showAndWait();
+
+                    Task<Void> task = new Task<>() {
+                        StockInResponse header;
+                        List<StockInDetailsResponse> details;
+
+                        @Override
+                        protected Void call() throws Exception {
+                            header = inventoryService.getStockInRequestById(row.getRequestId()).get(0);
+                            details = inventoryService.getStockInDetailsResponses(row.getRequestId());
+                            return null;
+                        }
+
+                        @Override
+                        protected void succeeded() {
+                            try {
+                                URL fxmlUrl = getClass().getResource("/views/GUI/ChiTietNhapKhoGUI.fxml");
+                                if (fxmlUrl == null) {
+                                    throw new IllegalStateException("Không tìm thấy file ReceiptDetail.fxml tại /views/Form/");
+                                }
+                                FXMLLoader loader = new FXMLLoader(fxmlUrl);
+
+                                DialogPane dialogPane = loader.load();
+
+                                ReceiptDetailController controller = loader.getController();
+                                controller.initData(header, inventoryService);  // truyền InventoryService
+
+                                Dialog<ButtonType> dialog = new Dialog<>();
+                                dialog.setDialogPane(dialogPane);
+                                dialog.setTitle("Chi tiết lệnh nhập kho");
+                                dialog.showAndWait();
+                            } catch (IOException e) {
+                                AlertUtil.showError("Không thể tải giao diện chi tiết: " + e.getMessage());
+                            }
+                        }
+
+                        @Override
+                        protected void failed() {
+                            AlertUtil.showError("Lỗi tải dữ liệu chi tiết: " + getException().getMessage());
+                            getException().printStackTrace();
+                        }
+                    };
+
+                    new Thread(task).start();
                 });
+
             }
 
             @Override
